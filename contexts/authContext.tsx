@@ -1,13 +1,39 @@
 import { auth, db } from "@/config/firebase";
 import { AuthContextType, UserType } from "@/types";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "expo-router";
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext<AuthContextType | null>(null)
 
 export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) =>{
     const [user, setUser] = useState<UserType>(null)
+    
+    const router = useRouter()
+
+    useEffect(() => {
+        const userState = onAuthStateChanged(auth, (firebaseUser) => {
+            if(firebaseUser){
+                setUser({
+                    uid: firebaseUser?.uid,
+                    name: firebaseUser?.displayName,
+                    email: firebaseUser?.email
+                })
+
+                updateUser(firebaseUser.uid)
+
+                router.replace("/(tabs)")
+            } else {
+                setUser(null)
+                router.replace("/(auth)/welcome")
+            }
+        })
+
+        return () => userState()
+
+    }, [])
+    
 
     const login = async(email: string, password: string) =>{
         try {
@@ -15,6 +41,14 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
             return { success: true }
         } catch (error: any) {
             let msg = error.message
+            if(msg.includes("(auth/invalid-credential)")){
+                msg = "Wrong email or password...!"
+            }
+
+            if(msg.includes("(auth/invalid-email)")){
+                msg = "Invalid email...!"
+            }
+
             return{
                 success: false,
                 msg
@@ -34,6 +68,15 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
             return { success: true }
         } catch (error: any) {
             let msg = error.message
+
+            if(msg.includes("(auth/invalid-email)")){
+                msg = "Invalid email...!"
+            }
+
+            if(msg.includes("(auth/email-already-in-use)")){
+                msg = "This email already in use...!"
+            }
+
             return{
                 success: false,
                 msg
@@ -65,7 +108,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
             //     msg
             // }
 
-            console.log("error: ", error)
+            console.log("error: ", msg)
         }
     }
 

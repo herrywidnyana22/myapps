@@ -11,6 +11,7 @@ import BackButton from '@/components/BackButton'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import ScreenWrapper from '@/components/ScreenWrapper'
+import { useAuth } from '@/contexts/authContext'
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -18,10 +19,25 @@ const Login = () => {
     const emailRef = useRef("")
     const passwordRef = useRef("")
 
+    const {login} = useAuth()
+
 
     const onSubmit = async () =>{
         if(!emailRef.current || !passwordRef.current){
-            Alert.alert("Login", "Please fill all fields...!")
+            return Alert.alert("Login", "Please fill all fields...!")
+        }
+
+        setIsLoading(true)
+
+        const action = await login(
+            emailRef.current,
+            passwordRef.current
+        )
+
+        setIsLoading(false)
+        
+        if(!action.success){
+            return Alert.alert("Login", action.msg)
         }
     }
     return (

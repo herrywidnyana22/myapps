@@ -25,12 +25,12 @@ const Register = () => {
 
     const onSubmit = async () =>{
         if(!emailRef.current || !passwordRef.current || !nameRef.current){
-            Alert.alert("Register", "Please fill all fields...!")
+           return Alert.alert("Register", "Please fill all fields...!")
         }
 
         setIsLoading(true)
 
-        const res = await register(
+        const action = await register(
             nameRef.current, 
             emailRef.current, 
             passwordRef.current
@@ -38,10 +38,8 @@ const Register = () => {
 
         setIsLoading(false)
 
-        console.log('Register result: ', res)
-
-        if(!res.success){
-            Alert.alert("Register", res.msg)
+        if(!action.success){
+            return Alert.alert("Register", action.msg)
         }
 
     }
