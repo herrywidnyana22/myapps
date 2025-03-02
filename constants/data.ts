@@ -1,4 +1,4 @@
-import { CategoryType, ExpenseCategoriesType } from "@/types";
+import { accountOptionType, CategoryType, ExpenseCategoriesType } from "@/types";
 import { colors } from "./themes";
 import { 
   ShoppingCart, 
@@ -13,10 +13,32 @@ import {
   Shirt, 
   User, 
   Ellipsis, 
-  DollarSign 
+  DollarSign,
+  Power, 
+  Settings,
+  FolderKey,
 } from "lucide-react-native"
 
-// import * as Icons from "phosphor-react-native"; // 
+export const accountOption: accountOptionType[] = [
+  {
+    title: 'Edit Profile',
+    icon: User,
+    routeName: '/(modals)/profileModal',
+    bgColor: '#6366f1'
+  }, {
+    title: 'Setting',
+    icon: Settings,
+    bgColor: '#059669'
+  }, {
+    title: 'Privacy & Policy',
+    icon: FolderKey,
+    bgColor: colors.neutral600
+  }, {
+    title: 'Logout',
+    icon: Power,
+    bgColor: '#e11d48'
+  }, 
+]
 
 export const expenseCategories: ExpenseCategoriesType = {
   groceries: {

@@ -1,7 +1,7 @@
 import { Href } from "expo-router";
 import { Firestore, Timestamp } from "firebase/firestore";
 import { LucideIcon } from "lucide-react-native";
-import React, { ReactNode } from "react";
+import { ReactNode } from "react";
 import {
   ActivityIndicator,
   ActivityIndicatorProps,
@@ -28,7 +28,7 @@ export type ModalWrapperProps = {
 
 export type accountOptionType = {
   title: string;
-  icon: React.ReactNode;
+  icon: LucideIcon;
   bgColor: string;
   routeName?: any;
 }

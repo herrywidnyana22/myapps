@@ -1,10 +1,10 @@
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
-import { Text } from '@react-navigation/elements';
-import { BottomTabBarProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { colors, spacingY } from '@/constants/themes';
 import { verticalScale } from '@/utils/style';
-import CustomText from './CustomText';
 import { ChartNoAxesCombined, Home, User, Wallet } from 'lucide-react-native';
+
+import CustomText from './CustomText';
 
 const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
 
@@ -77,6 +77,20 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
                         style={styles.tabbarItem}
                     >
                         { tabIcons[route.name] && tabIcons[route.name](isFocused) }
+                        <CustomText 
+                            size={11}
+                            color={colors.white}
+                            style={{
+                                textTransform:'capitalize', 
+                                color: isFocused 
+                                    ? colors.primary 
+                                    : colors.neutral300,
+                                marginTop: spacingY._5
+                                
+                            }}
+                        >
+                            {route.name}
+                        </CustomText>
                     </TouchableOpacity>
                 );
             })
@@ -93,6 +107,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: Platform.OS == 'ios' ? verticalScale(72) : verticalScale(55),
         flexDirection:'row',
+        gap: 2,
         alignItems: 'center',
         justifyContent: 'space-around',
         backgroundColor: colors.neutral800,
