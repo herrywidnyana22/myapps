@@ -11,24 +11,12 @@ const Home = () => {
 
   const {user} = useAuth()
 
-  const onLogout = async() =>{
-    await signOut(auth)
-  }
-
   return (
     <ScreenWrapper>
       <CustomText>
         Home
       </CustomText>
-      <Button
-        onPress={onLogout}
-      >
-        <CustomText
-          color={colors.black}
-        >
-          Logout
-        </CustomText>
-      </Button>
+      
     </ScreenWrapper>
   )
 }

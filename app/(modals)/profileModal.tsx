@@ -13,6 +13,9 @@ import { useEffect, useState } from 'react'
 import { UserDataType } from '@/types'
 import Button from '@/components/Button'
 import { useAuth } from '@/contexts/authContext'
+import { updateUser } from '@/services/userService'
+import { useRouter } from 'expo-router'
+import * as ImagePicker from 'expo-image-picker'
 
 const ProfileModal = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -21,7 +24,8 @@ const ProfileModal = () => {
         image: null
     })
 
-    const { user } = useAuth()
+    const { user, updateUserData } = useAuth()
+    const router = useRouter()
 
     useEffect(() =>{
         setUserData({
@@ -35,7 +39,31 @@ const ProfileModal = () => {
         if(!name.trim()){
             return Alert.alert("User", "Please fill all the fields...!")
         }
+
+        setIsLoading(true)
+        const action = await updateUser(user?.uid as string, userData)
+        setIsLoading(false)
+
+        if(action.success){
+            updateUserData(user?.uid as string)
+            router.back()
+        } else {
+            Alert.alert("User", action.msg)
+        }
     }
+
+    const onSelectImage = async() =>{
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ['images'],
+            aspect: [4, 3],
+            quality: 0.5
+        })
+
+        if(!result.canceled){
+            setUserData({...userData, image: result.assets[0]})
+        }
+    }
+
     return (
         <ModalWrapper>
             <View style={styles.container}>
@@ -53,7 +81,10 @@ const ProfileModal = () => {
                             style={styles.avatar}
                         />
 
-                        <TouchableOpacity style={styles.editIcon}>
+                        <TouchableOpacity 
+                            onPress={onSelectImage}
+                            style={styles.editIcon}
+                        >
                             <Pencil
                                 size={verticalScale(20)}
                                 color={colors.neutral800}
@@ -78,6 +109,7 @@ const ProfileModal = () => {
                 <Button
                     onPress={onSubmit}
                     style={{flex: 1}}
+                    loading={isLoading}
                 >
                     <CustomText
                         color={colors.black}
