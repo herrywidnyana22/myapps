@@ -23,15 +23,12 @@ export const updateUser = async (
 
             updateData.image = imageUploadAction.data
         }
-         
-
         return{
             success: true,
             msg: "Updated success...!"
         }
         
     } catch (error: any) {
-        console.log('error update user: ', error)
 
         return{
             success: false,

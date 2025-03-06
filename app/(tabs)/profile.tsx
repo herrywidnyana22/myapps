@@ -28,7 +28,6 @@ const Profile = () => {
       {
         text: 'Cancel',
         style: 'cancel',
-        onPress: () => console.log('Cancel Pressed'),
       },{
         text: 'Logout',
         style: 'destructive',
