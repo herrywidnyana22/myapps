@@ -27,7 +27,7 @@ const ImageUpload = ({
         })
 
         if(!result.canceled){
-            onSelect(result.assets[0])
+            onSelect(result.assets[0] )
         }
     }
 
