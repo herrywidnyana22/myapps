@@ -9,6 +9,12 @@ export const uploadToCloudinary = async(
 ): Promise<ResponseType> =>{
     try {
         if(!file){
+            return{
+                success: true,
+                data: null
+            }
+        }
+        if(!file){
             return {
                 success: true,
                 data: null

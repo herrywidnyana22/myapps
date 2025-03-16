@@ -8,11 +8,11 @@ import CustomText from '@/components/CustomText'
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import { useAuth } from '@/contexts/authContext'
-import { updateUser } from '@/services/userService'
 import { useRouter } from 'expo-router'
 import ImageUpload from '@/components/ImageUpload'
 import { useState } from 'react'
 import { WalletType } from '@/types'
+import { createUpdateWallet } from '@/services/walletService'
 
 const WalletModal = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -27,18 +27,23 @@ const WalletModal = () => {
     const onSubmit = async() =>{
         let { name, image } = wallet
         if(!name.trim() || !image){
-            return Alert.alert("User", "Please fill all the fields...!")
+            return Alert.alert("Wallet", "Please fill all the fields...!")
         }
-
+        const walletData: WalletType = {
+            name,
+            image,
+            uid: user?.uid
+        }
         setIsLoading(true)
-        const action = await updateUser(user?.uid as string, wallet)
+
+        const action = await createUpdateWallet(walletData)
+        
         setIsLoading(false)
 
         if(action.success){
-            updateUserData(user?.uid as string)
             router.back()
         } else {
-            Alert.alert("User", action.msg)
+            Alert.alert("Wallet", action.msg)
         }
     }
 

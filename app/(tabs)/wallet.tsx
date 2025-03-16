@@ -1,14 +1,25 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import { colors, radius, spacingX, spacingY } from '@/constants/themes'
 import { verticalScale } from '@/utils/style'
 import CustomText from '@/components/CustomText'
-import { Circle, Plus } from 'lucide-react-native'
+import { Plus } from 'lucide-react-native'
 import { useRouter } from 'expo-router'
+import useData from '@/hooks/useData'
+import { WalletType } from '@/types'
+import { useAuth } from '@/contexts/authContext'
+import { orderBy, where } from 'firebase/firestore'
 
 const Wallet = () => {
   const router = useRouter()
+  const {user} = useAuth()
+  const {data, isLoading, error} = useData<WalletType>(
+    "wallets",
+    [
+      where("uid", "==", user?.uid),
+      orderBy("created", "desc")
+    ]
+  )
   const totalBalance = () =>{
     return 321646
   }
@@ -41,11 +52,11 @@ const Wallet = () => {
               My Wallet
             </CustomText>
             <TouchableOpacity
-              onPress={() => router.push("/(modals)/walletModal")}
+              onPress={() => router.push('/(modals)/walletModal' as any)}
             >
               <Plus
                 size={verticalScale(30)}
-                color={colors.white}
+                color={colors.black}
                 style={{backgroundColor: colors.primary, borderRadius:'50%'}}
               />
             </TouchableOpacity>
