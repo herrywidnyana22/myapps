@@ -1,7 +1,8 @@
-import { CLOUDINARY_CLOUD_URL, CLOUDINARY_UPLOAD_PRESET } from "@/constants"
+import { CLOUDINARY_API_URL, CLOUDINARY_UPLOAD_PRESET } from "@/constants"
 import { ResponseType } from "@/types"
 
 import axios from "axios"
+
 
 export const uploadToCloudinary = async(
     file: {uri?: string} | string,
@@ -38,7 +39,7 @@ export const uploadToCloudinary = async(
             formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET)
             formData.append("folder", folder)
 
-            const action = await axios.post(CLOUDINARY_CLOUD_URL, formData, {
+            const action = await axios.post(CLOUDINARY_API_URL, formData, {
                 headers:{
                     "Content-Type": "multipart/form-data"
                 }
@@ -46,7 +47,7 @@ export const uploadToCloudinary = async(
 
             return{
                 success: true,
-                data: action?.data?.data?.secure_url
+                data: action?.data?.secure_url
             }
         }
         return{

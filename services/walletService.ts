@@ -29,17 +29,20 @@ export const createUpdateWallet = async(
             walletToSave.totalIncome = 0
         }
 
-        const walletRef = wallets?.id 
+        const getWalletID = wallets?.id 
             ? doc(db, "wallets", wallets?.id) 
             : doc(collection(db, "wallets"))
         
-        await setDoc(walletRef, walletToSave,{
+        await setDoc(getWalletID, walletToSave,{
             merge: true
         })
         
         return{
             success: true,
-            data: {...walletToSave, id: walletRef.id}
+            data: {
+                ...walletToSave, 
+                id: getWalletID.id
+            }
         }
     } catch (error: any) {
         return{
@@ -52,8 +55,8 @@ export const createUpdateWallet = async(
 export const deleteWallet = async(walletID: string): Promise<ResponseType> => {
     try {
 
-        const walletRef = doc(db, "wallets", walletID)
-        await deleteDoc(walletRef)
+        const getWalletID = doc(db, "wallets", walletID)
+        await deleteDoc(getWalletID)
 
         // TODO: delete all transaction related on this wallet
 

@@ -72,7 +72,7 @@ export type BackButtonProps = {
 
 export type TransactionType = {
   id?: string;
-  type: string;
+  type: "expense" | "income";
   amount: number;
   category?: string;
   date: Date | Timestamp | string;
@@ -89,7 +89,7 @@ export type CategoryType = {
   bgColor: string;
 }
 
-export type ExpenseCategoriesType = {
+export type TransactionCategoriesType = {
   [key: string]: CategoryType;
 }
 
@@ -130,6 +130,7 @@ export type ImageUploadProps = {
   containerStyle?: ViewStyle;
   imageStyle?: ViewStyle;
   placeholder?: string;
+  aspectRatio?: [number, number] 
 }
 
 export type UserType = {

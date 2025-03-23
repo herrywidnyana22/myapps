@@ -82,14 +82,14 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
                             color={colors.white}
                             style={{
                                 textTransform:'capitalize', 
+                                marginTop: spacingY._5,
                                 color: isFocused 
                                     ? colors.primary 
                                     : colors.neutral300,
-                                marginTop: spacingY._5
                                 
                             }}
                         >
-                            {route.name}
+                            {route.name == 'index' ? "Home" : route.name}
                         </CustomText>
                     </TouchableOpacity>
                 );

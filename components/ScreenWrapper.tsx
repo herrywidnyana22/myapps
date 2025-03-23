@@ -7,7 +7,7 @@ const { height } = Dimensions.get('window')
 const ScreenWrapper = ({style, children}: ScreenWrapperProps) => {
     let paddingTop = Platform.OS == 'ios'
     ? height * 0.06
-    : 50
+    : 0
   return (
     <View
         style={[{
@@ -19,6 +19,7 @@ const ScreenWrapper = ({style, children}: ScreenWrapperProps) => {
     >
         <StatusBar
             barStyle="light-content"
+            backgroundColor={colors.neutral900}
         />
         { children }
     </View>

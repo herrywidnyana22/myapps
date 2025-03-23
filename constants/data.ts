@@ -1,4 +1,4 @@
-import { accountOptionType, CategoryType, ExpenseCategoriesType } from "@/types";
+import { accountOptionType, CategoryType, TransactionCategoriesType } from "@/types";
 import { colors } from "../styles/themes";
 import { 
   ShoppingCart, 
@@ -17,6 +17,13 @@ import {
   Power, 
   Settings,
   FolderKey,
+  ArrowUp,
+  ArrowDown,
+  Banknote,
+  Gift,
+  Smile,
+  ChartCandlestick,
+  BriefcaseBusiness,
 } from "lucide-react-native"
 
 export const accountOption: accountOptionType[] = [
@@ -40,7 +47,7 @@ export const accountOption: accountOptionType[] = [
   }, 
 ]
 
-export const expenseCategories: ExpenseCategoriesType = {
+export const expenseCategories: TransactionCategoriesType = {
   groceries: {
     label: "Groceries",
     value: "groceries",
@@ -113,16 +120,52 @@ export const expenseCategories: ExpenseCategoriesType = {
     icon: Ellipsis,
     bgColor: "#525252", // Neutral Dark Gray
   },
-};
+}
 
-export const incomeCategory: CategoryType = {
-  label: "Income",
-  value: "income",
-  icon: DollarSign,
-  bgColor: "#16a34a", // Dark
+export const incomeCategory: TransactionCategoriesType = {
+  salary: {
+    label: "Salary",
+    value: "salary",
+    icon: Banknote,
+    bgColor: "#27AE60",
+  },
+  busisness: {
+    label: "Busisness",
+    value: "busisness",
+    icon: BriefcaseBusiness,
+    bgColor: "#F2994A",
+  },
+  tradeInvest: {
+    label: "Trade & Investment",
+    value: "tradeInvest",
+    icon: ChartCandlestick,
+    bgColor: "#2D9CDB",
+  },
+  gift: {
+    label: "Gift",
+    value: "gift",
+    icon: Gift,
+    bgColor: "#E91E63",
+  },
+  other: {
+    label: "Other",
+    value: "other",
+    icon: Smile,
+    bgColor: "#9B51E0",
+  },
 };
 
 export const transactionTypes = [
-  { label: "Expense", value: "expense" },
-  { label: "Income", value: "income" },
+  { 
+    label: "Expense", 
+    value: "expense" ,
+    icon: ArrowUp,
+    bgColor: colors.rose
+  },
+  { 
+    label: "Income", 
+    value: "income",
+    icon: ArrowDown,
+    bgColor: colors.green
+  },
 ];

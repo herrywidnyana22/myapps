@@ -11,11 +11,12 @@ import { useAuth } from '@/contexts/authContext'
 import { orderBy, where } from 'firebase/firestore'
 import Loading from '@/components/Loading'
 import WalletItem from '@/components/WalletItem'
-import { toIdr } from '@/utils/toIDR'
+import { toLabelIdr } from '@/utils/idrFormater'
 
 const Wallet = () => {
   const router = useRouter()
   const {user} = useAuth()
+  
   const {data: walletData, isLoading, error} = useData<WalletType>(
     "wallets",
     [
@@ -25,7 +26,8 @@ const Wallet = () => {
   )
   const totalBalance = () =>{
     const totalAmount = walletData.reduce((total, item) => total + (item.amount || 0), 0)
-    return toIdr(totalAmount)
+    
+    return toLabelIdr(totalAmount)
   }
    
   

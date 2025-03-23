@@ -8,9 +8,6 @@ export const updateUser = async (
     updateData: UserDataType
 ): Promise<ResponseType> =>{
     try {
-        const userRef = doc(db, "users", uid)
-        await updateDoc(userRef, updateData)
-
         if(updateData.image && updateData?.image?.uri){
             const imageUploadAction = await uploadToCloudinary(updateData.image, "users")
 
@@ -23,6 +20,10 @@ export const updateUser = async (
 
             updateData.image = imageUploadAction.data
         }
+
+        const getUserUID = doc(db, "users", uid)
+        await updateDoc(getUserUID, updateData)
+
         return{
             success: true,
             msg: "Updated success...!"

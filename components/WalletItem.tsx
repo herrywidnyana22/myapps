@@ -1,13 +1,14 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import CustomText from './CustomText'
-import { WalletType } from '@/types'
+import { Image } from 'expo-image'
+import { toIdr } from '@/utils/idrFormater'
 import { Router } from 'expo-router'
+import { WalletType } from '@/types'
+import { ChevronRight } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
 import { colors, radius, spacingX } from '@/styles/themes'
-import { Image } from 'expo-image'
-import { ChevronRight } from 'lucide-react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
+
+import CustomText from './CustomText'
 import Animated, { FadeInDown } from 'react-native-reanimated'
-import { toIdr } from '@/utils/toIDR'
 
 const WalletItem = ({
     item,

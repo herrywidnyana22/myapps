@@ -12,11 +12,26 @@ import HomeCard from '@/components/HomeCard'
 import CustomText from '@/components/CustomText'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import TransactionList from '@/components/TransactionList'
+import useData from '@/hooks/useData'
+import { limit, orderBy, where } from 'firebase/firestore'
+import { TransactionType, WalletType } from '@/types'
 
 const Home = () => {
 
   const {user} = useAuth()
   const router = useRouter()
+
+  const {
+    data: recentTransactions, 
+    isLoading: transactionLoading, 
+    error
+  } = useData<TransactionType>(
+    "transactions", [
+      where("uid", "==", user?.uid),
+      orderBy("date", "desc"),
+      limit(30)
+    ]
+  )
 
   return (
     <ScreenWrapper>
@@ -52,8 +67,8 @@ const Home = () => {
           </View>
           <TransactionList
             title='Recent Transaction'
-            data={[1, 2, 3, 4, 5, 6, 7, 8, 9]}
-            isLoading={false}
+            data={recentTransactions}
+            isLoading={transactionLoading}
             emptyListMessage='No transaction...'
           />
         </View>

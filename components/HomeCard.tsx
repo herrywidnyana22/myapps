@@ -1,10 +1,41 @@
+import { useAuth } from '@/contexts/authContext'
+import { WalletType } from '@/types'
+import { orderBy, where } from 'firebase/firestore'
 import { colors, spacingX, spacingY } from '@/styles/themes'
-import { horizontalScale, verticalScale } from '@/utils/style'
 import { ArrowDown, ArrowUp, Ellipsis } from 'lucide-react-native'
+import { horizontalScale, verticalScale } from '@/utils/style'
 import { ImageBackground, StyleSheet, View } from 'react-native'
+
 import CustomText from './CustomText'
+import useData from '@/hooks/useData'
+import { toIdr, toLabelIdr } from '@/utils/idrFormater'
 
 const HomeCard = () => {
+
+    const {user} = useAuth()
+    
+    const {data: walletData, isLoading: walletLoading, error: walletError} = useData<WalletType>(
+        "wallets",
+        [
+            where("uid", "==", user?.uid),
+            orderBy("created", "desc")
+        ]
+    )
+
+    const getTotalBalance = () =>{
+        return walletData.reduce((totals: any, item: WalletType) =>{
+            totals.balance += Number(item.amount)
+            totals.income += Number(item.totalIncome)
+            totals.expense += Number(item.totalExpenses)
+
+            return totals
+        }, {
+            balance: 0,
+            income: 0,
+            expense: 0
+        })
+    }
+
     return (
         <ImageBackground
             source={require('@/assets/images/card.png')}
@@ -32,7 +63,7 @@ const HomeCard = () => {
                         size={verticalScale(30)}
                         fontWeight={'bold'}
                     >
-                        Rp.123.204.000
+                        { walletLoading ? "----" : toLabelIdr(getTotalBalance()?.balance)}
                     </CustomText>  
                 </View>
 
@@ -42,52 +73,55 @@ const HomeCard = () => {
                             <View style={styles.statIcon}>
                                 <ArrowDown
                                     size={verticalScale(15)}
-                                    color={colors.black}
+                                    color={colors.green}
                                     strokeWidth={3}
                                 />
                             </View>
-                            <CustomText
-                                color={colors.neutral500}
-                                fontWeight={'500'}
-                            >
-                                Income
-                            </CustomText>
-                        </View>
-                        <View style={{ alignSelf: 'center' }}>
-                            <CustomText
-                                size={verticalScale(14)}
-                                color={colors.green}
-                                fontWeight={'600'}
-                            >
-                                Rp.400.000
-                            </CustomText>
+                            <View>
+                                <CustomText
+                                    size={verticalScale(12)}
+                                    color={colors.neutral500}
+                                    fontWeight={'500'}
+                                >
+                                    Income
+                                </CustomText>
+                                <CustomText
+                                    size={verticalScale(14)}
+                                    color={colors.green}
+                                    fontWeight={'600'}
+                                >
+                                    { walletLoading ? "----" : toLabelIdr(getTotalBalance()?.income)}
+                                </CustomText>
+
+                            </View>
                         </View>
                     </View>
 
-                    <View style={{ gap: verticalScale(5) }}>
+                    <View>
                         <View style={styles.incomeExpense}>
                             <View style={styles.statIcon}>
                                 <ArrowUp
                                     size={verticalScale(15)}
-                                    color={colors.black}
+                                    color={colors.rose}
                                     strokeWidth={3}
                                 />
                             </View>
-                            <CustomText
-                                color={colors.neutral500}
-                                fontWeight={'500'}
-                            >
-                                Expense
-                            </CustomText>
-                        </View>
-                        <View style={{ alignSelf: 'center' }}>
-                            <CustomText
-                                size={verticalScale(14)}
-                                color={colors.rose}
-                                fontWeight={'600'}
-                            >
-                                Rp.400.000
-                            </CustomText>
+                            <View>
+                                <CustomText
+                                    size={verticalScale(12)}
+                                    color={colors.neutral500}
+                                    fontWeight={'500'}
+                                >
+                                    Expense
+                                </CustomText>
+                                <CustomText
+                                    size={verticalScale(14)}
+                                    color={colors.rose}
+                                    fontWeight={'600'}
+                                >
+                                    { walletLoading ? "----" : toLabelIdr(getTotalBalance()?.expense)}
+                                </CustomText>
+                            </View>
                         </View>
                     </View>
                 </View>
