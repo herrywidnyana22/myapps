@@ -1,21 +1,24 @@
-import { Alert, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { colors, spacingX, spacingY } from '@/constants/themes'
-import { horizontalScale, verticalScale } from '@/utils/style'
-import ModalWrapper from '@/components/ModalWrapper'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
+
 import { Image } from 'expo-image'
-import { getAvatar } from '@/services/imageService'
 import { Pencil } from 'lucide-react-native'
-import CustomText from '@/components/CustomText'
-import Input from '@/components/Input'
-import { useEffect, useState } from 'react'
-import { UserDataType } from '@/types'
-import Button from '@/components/Button'
 import { useAuth } from '@/contexts/authContext'
-import { updateUser } from '@/services/userService'
+import { getAvatar } from '@/services/imageService'
 import { useRouter } from 'expo-router'
+import { updateUser } from '@/services/userService'
+import { UserDataType } from '@/types'
+import { useEffect, useState } from 'react'
+import { colors, spacingX, spacingY } from '@/styles/themes'
+import { horizontalScale, verticalScale } from '@/utils/style'
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+
 import * as ImagePicker from 'expo-image-picker'
+
+import Input from '@/components/Input'
+import Header from '@/components/Header'
+import Button from '@/components/Button'
+import CustomText from '@/components/CustomText'
+import BackButton from '@/components/BackButton'
+import ModalWrapper from '@/components/ModalWrapper'
 
 const ProfileModal = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -109,7 +112,7 @@ const ProfileModal = () => {
                 <Button
                     onPress={onSubmit}
                     style={{flex: 1}}
-                    loading={isLoading}
+                    isLoading={isLoading}
                 >
                     <CustomText
                         color={colors.black}

@@ -1,6 +1,6 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
 import ScreenWrapper from '@/components/ScreenWrapper'
-import { colors, radius, spacingX, spacingY } from '@/constants/themes'
+import { colors, radius, spacingX, spacingY } from '@/styles/themes'
 import { verticalScale } from '@/utils/style'
 import CustomText from '@/components/CustomText'
 import { Plus } from 'lucide-react-native'
@@ -9,11 +9,14 @@ import useData from '@/hooks/useData'
 import { WalletType } from '@/types'
 import { useAuth } from '@/contexts/authContext'
 import { orderBy, where } from 'firebase/firestore'
+import Loading from '@/components/Loading'
+import WalletItem from '@/components/WalletItem'
+import { toIdr } from '@/utils/toIDR'
 
 const Wallet = () => {
   const router = useRouter()
   const {user} = useAuth()
-  const {data, isLoading, error} = useData<WalletType>(
+  const {data: walletData, isLoading, error} = useData<WalletType>(
     "wallets",
     [
       where("uid", "==", user?.uid),
@@ -21,8 +24,11 @@ const Wallet = () => {
     ]
   )
   const totalBalance = () =>{
-    return 321646
+    const totalAmount = walletData.reduce((total, item) => total + (item.amount || 0), 0)
+    return toIdr(totalAmount)
   }
+   
+  
   return (
     <ScreenWrapper
       style={{backgroundColor: colors.black}}
@@ -33,7 +39,7 @@ const Wallet = () => {
             size={45}
             fontWeight={'500'}
           >
-            Rp. {totalBalance()?.toFixed(0)}
+            {totalBalance()}
           </CustomText>
           <CustomText
             size={15}
@@ -53,14 +59,30 @@ const Wallet = () => {
             </CustomText>
             <TouchableOpacity
               onPress={() => router.push('/(modals)/walletModal' as any)}
+              style={styles.addIcon}
             >
               <Plus
-                size={verticalScale(30)}
+                size={verticalScale(20)}
+                strokeWidth={3}
                 color={colors.black}
-                style={{backgroundColor: colors.primary, borderRadius:'50%'}}
               />
             </TouchableOpacity>
           </View>
+
+          { isLoading && <Loading/>}
+          <FlatList
+            contentContainerStyle={styles.list}
+            data={walletData}
+            renderItem={({item, index}) =>{
+              return (
+                <WalletItem
+                  item={item}
+                  index={index}
+                  router={router}
+                />
+              )
+            }}
+          />
         </View>
       </View>
     </ScreenWrapper>
@@ -97,5 +119,10 @@ const styles = StyleSheet.create({
   list:{
     paddingVertical: spacingX._25,
     paddingTop: spacingY._15
+  }, 
+  addIcon:{
+    backgroundColor: colors.primary, 
+    borderRadius:'50%', 
+    padding:verticalScale(5)
   }
 })

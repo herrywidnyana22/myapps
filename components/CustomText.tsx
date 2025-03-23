@@ -1,6 +1,6 @@
 import { Text, TextStyle } from 'react-native'
 import { CustomTextProps } from '@/types'
-import { colors } from '@/constants/themes'
+import { colors } from '@/styles/themes'
 import { verticalScale } from '@/utils/style'
 
 const CustomText = ({

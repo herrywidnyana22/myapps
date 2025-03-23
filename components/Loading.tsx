@@ -1,5 +1,5 @@
 import { ActivityIndicator, ActivityIndicatorProps, View } from 'react-native'
-import { colors } from '@/constants/themes'
+import { colors } from '@/styles/themes'
 
 const Loading = ({
     size="large",

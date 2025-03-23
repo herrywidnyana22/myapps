@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native'
 import React from 'react'
 import { InputProps } from '@/types'
-import { colors, radius, spacingX } from '@/constants/themes'
+import { colors, radius, spacingX } from '@/styles/themes'
 import { verticalScale } from '@/utils/style'
 
 const Input = (props: InputProps) => {

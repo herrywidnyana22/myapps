@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import CustomText from "@/components/CustomText";
-import { colors, spacingX, spacingY } from "@/constants/themes";
+import { colors, spacingX, spacingY } from "@/styles/themes";
 import { verticalScale } from "@/utils/style";
 import { useRouter } from "expo-router";
 import { View, StyleSheet, TouchableOpacity } from "react-native";

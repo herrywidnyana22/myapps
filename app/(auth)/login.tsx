@@ -4,7 +4,7 @@ import { Alert, Pressable, StyleSheet, View } from 'react-native'
 import { KeyRound, Mail } from 'lucide-react-native'
 
 import { verticalScale } from '@/utils/style'
-import { colors, spacingX, spacingY } from '@/constants/themes'
+import { colors, spacingX, spacingY } from '@/styles/themes'
 
 import CustomText from '@/components/CustomText'
 import BackButton from '@/components/BackButton'
@@ -105,7 +105,7 @@ const Login = () => {
                     </CustomText>
                     <Button
                         onPress={onSubmit}
-                        loading={isLoading}
+                        isLoading={isLoading}
                     >
                         <CustomText
                             size={20}

@@ -1,8 +1,7 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, TouchableOpacity, StyleSheet } from 'react-native'
 import { ImageUploadProps } from '@/types'
-import { Upload, X, XCircle } from 'lucide-react-native'
-import { colors, radius } from '@/constants/themes'
+import { Upload, X } from 'lucide-react-native'
+import { colors, radius } from '@/styles/themes'
 import CustomText from './CustomText'
 import { horizontalScale, verticalScale } from '@/utils/style'
 import { Image } from 'expo-image'
@@ -29,6 +28,7 @@ const ImageUpload = ({
         if(!result.canceled){
             onSelect(result.assets[0] )
         }
+
     }
 
     return (

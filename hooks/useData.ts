@@ -28,7 +28,6 @@ const useData = <T>(
             setData(getData)
             setIsLoading(false)
         }, (err) =>{
-            console.log("Error to get data: ", err)
             setError(err.message)
         })
 

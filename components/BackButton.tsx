@@ -4,7 +4,7 @@ import { BackButtonProps } from '@/types'
 import { useRouter } from 'expo-router'
 
 import { verticalScale } from '@/utils/style'
-import { colors, radius } from '@/constants/themes'
+import { colors, radius } from '@/styles/themes'
 import { ChevronLeft } from 'lucide-react-native'
 
 const BackButton = ({

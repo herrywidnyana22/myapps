@@ -1,6 +1,6 @@
 import { Trash2 } from 'lucide-react-native'
 import { useAuth } from '@/contexts/authContext'
-import { WalletType } from '@/types'
+import { TransactionType, WalletType } from '@/types'
 import { useEffect, useState } from 'react'
 import { colors, spacingX, spacingY } from '@/styles/themes'
 import { horizontalScale, verticalScale } from '@/utils/style'
@@ -16,10 +16,15 @@ import CustomText from '@/components/CustomText'
 import ImageUpload from '@/components/ImageUpload'
 import ModalWrapper from '@/components/ModalWrapper'
 
-const WalletModal = () => {
+const TransactionModal = () => {
     const [isLoading, setIsLoading] = useState(false)
-    const [wallet, setWallet] = useState<WalletType>({
-        name: "",
+    const [transaction, setTransaction] = useState<TransactionType>({
+        walletId: '',
+        type: 'expense',
+        amount: 0,
+        description: '',
+        category: '',
+        date: new Date(),
         image: null
     })
 
@@ -27,43 +32,43 @@ const WalletModal = () => {
     const router = useRouter()
     const params = useLocalSearchParams();
 
-    const onPreviewWallet = {
+    const onPreviewTransaction = {
         id: params.id as string,
         name: params.name as string,
         image: typeof params.image === "string" ? JSON.parse(params.image) : null
     }
 
     const onSubmit = async() =>{
-        let { name, image } = wallet
-        if(!name.trim() || !image){
-            return Alert.alert("Wallet", "Please fill all the fields...!")
-        }
-        const walletData: WalletType = {
-            name,
-            image,
-            uid: user?.uid
-        }
-        setIsLoading(true)
+        // let { name, image } = transaction
+        // if(!name.trim() || !image){
+        //     return Alert.alert("transaction", "Please fill all the fields...!")
+        // }
+        // const walletData: WalletType = {
+        //     name,
+        //     image,
+        //     uid: user?.uid
+        // }
+        // setIsLoading(true)
 
-        if(onPreviewWallet?.id) {
-            walletData.id = onPreviewWallet?.id
-        }
-        const action = await createUpdateWallet(walletData)
+        // if(onPreviewTransaction?.id) {
+        //     walletData.id = onPreviewTransaction?.id
+        // }
+        // const action = await createUpdateWallet(walletData)
         
-        setIsLoading(false)
+        // setIsLoading(false)
 
-        if(action.success){
-            router.back()
-        } else {
-            Alert.alert("Wallet", action.msg)
-        }
+        // if(action.success){
+        //     router.back()
+        // } else {
+        //     Alert.alert("Wallet", action.msg)
+        // }
     }
 
     const onDelete = async() =>{
-        if(!onPreviewWallet?.id) return
+        if(!onPreviewTransaction?.id) return
 
         setIsLoading(true)
-        const action = await deleteWallet(onPreviewWallet?.id)
+        const action = await deleteWallet(onPreviewTransaction?.id)
 
         setIsLoading(false)
         if(action.success){
@@ -90,20 +95,20 @@ const WalletModal = () => {
         )
     }
 
-    useEffect(() => {
-        if(onPreviewWallet?.id){
-            setWallet({
-                name: onPreviewWallet?.name,
-                image: onPreviewWallet?.image
-            })
-        }
-    }, [])
+    // useEffect(() => {
+    //     if(onPreviewTransaction?.id){
+    //         setTransaction({
+    //             name: onPreviewTransaction?.name,
+    //             image: onPreviewTransaction?.image
+    //         })
+    //     }
+    // }, [])
 
     return (
         <ModalWrapper>
             <View style={styles.container}>
                 <Header
-                    title={`${onPreviewWallet?.id ? 'Update' : 'New'} Wallet`}
+                    title={`${onPreviewTransaction?.id ? 'Update' : 'New'} Transaction`}
                     leftIcon={<BackButton/>}
                     style={{marginBottom: spacingY._10}}
                 />
@@ -113,17 +118,17 @@ const WalletModal = () => {
                             Name
                         </CustomText>
                         <Input
-                            onChangeText={(value) => setWallet({...wallet, name: value})}
-                            value={wallet.name}
+                            onChangeText={(value) => setTransaction({...transaction, name: value})}
+                            value={transaction.name}
                             placeholder='Salary'
                         />
                     </View>
                     <View style={styles.inputContainer}>
                         <CustomText color={colors.neutral200}>Wallet Icon</CustomText>
                         <ImageUpload
-                            file={wallet?.image}
-                            onSelect={(file) => setWallet({...wallet, image: file})}
-                            onClear={() => setWallet({...wallet, image: null})}
+                            file={transaction?.image}
+                            onSelect={(file) => setTransaction({...transaction, image: file})}
+                            onClear={() => setTransaction({...transaction, image: null})}
                             placeholder='Upload Image'
                         />
                     </View>
@@ -132,7 +137,7 @@ const WalletModal = () => {
 
             <View style={styles.footer}>
             {
-                onPreviewWallet?.id && (
+                onPreviewTransaction?.id && (
                     <Button
                         onPress={showDeleteAlert}
                         style={styles.deleteButton}
@@ -154,7 +159,7 @@ const WalletModal = () => {
                         color={colors.black}
                         fontWeight={'700'}
                     >
-                        {`${onPreviewWallet?.id ? 'Update' : 'Add'} Wallet`}
+                        {`${onPreviewTransaction?.id ? 'Update' : 'Add'} Transaction`}
                     </CustomText>
                 </Button>
             </View>
@@ -162,7 +167,7 @@ const WalletModal = () => {
     )
 }
 
-export default WalletModal
+export default TransactionModal
 
 const styles = StyleSheet.create({
     container:{

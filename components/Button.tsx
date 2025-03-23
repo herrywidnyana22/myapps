@@ -1,14 +1,15 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { CustomButtonProps } from '@/types'
-import { colors, radius } from '@/constants/themes'
+import { colors, radius } from '@/styles/themes'
 import { verticalScale } from '@/utils/style'
 import Loading from './Loading'
 
 const Button = ({
     style,
     onPress,
-    loading= false,
+    isLoading= false,
+    variant= "primary",
     children
 }:CustomButtonProps) => {
     const loadingAnimate = (
@@ -23,15 +24,19 @@ const Button = ({
                 styles.button, 
                 style, 
                 {
-                    backgroundColor: loading ? 'transparent' : colors.primary,
-                    borderWidth: loading ? 1.5 : 0,
-                    borderColor: loading ? colors.primary : 'transparent'
+                    backgroundColor:variant === "primary" 
+                        ? isLoading ? 'transparent' : colors.primary 
+                        : isLoading ? 'transparent' : colors.rose,
+                    borderWidth: isLoading ? 1.5 : 0,
+                    borderColor:  variant === "primary"  
+                        ? isLoading ? colors.primary : 'transparent'
+                        : isLoading ? colors.rose : 'transparent'
                 }
             ]}
             onPress={onPress}
         >
             { 
-                loading
+                isLoading
                 ? loadingAnimate
                 : children 
                 

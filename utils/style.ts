@@ -1,3 +1,4 @@
+
 import { Dimensions, PixelRatio } from "react-native";
 
 const { 
@@ -23,3 +24,4 @@ export const verticalScale = (size: number) =>{
         size * (longDimension / BASE_HEIGHT)
     ))
 }
+

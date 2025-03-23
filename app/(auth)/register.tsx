@@ -4,7 +4,7 @@ import { Alert, Pressable, StyleSheet, View } from 'react-native'
 import { KeyRound, Mail, User } from 'lucide-react-native'
 
 import { verticalScale } from '@/utils/style'
-import { colors, spacingX, spacingY } from '@/constants/themes'
+import { colors, spacingX, spacingY } from '@/styles/themes'
 
 import Input from '@/components/Input'
 import Button from '@/components/Button'
@@ -111,7 +111,7 @@ const Register = () => {
 
                     <Button
                         onPress={onSubmit}
-                        loading={isLoading}
+                        isLoading={isLoading}
                     >
                         <CustomText
                             size={20}

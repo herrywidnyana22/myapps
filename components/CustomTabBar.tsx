@@ -1,6 +1,6 @@
 import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { colors, spacingY } from '@/constants/themes';
+import { colors, spacingY } from '@/styles/themes';
 import { verticalScale } from '@/utils/style';
 import { ChartNoAxesCombined, Home, User, Wallet } from 'lucide-react-native';
 

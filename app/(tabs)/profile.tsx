@@ -1,6 +1,6 @@
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import ScreenWrapper from '@/components/ScreenWrapper'
-import { colors, radius, spacingX, spacingY } from '@/constants/themes'
+import { colors, radius, spacingX, spacingY } from '@/styles/themes'
 import { verticalScale } from '@/utils/style'
 import Header from '@/components/Header'
 import BackButton from '@/components/BackButton'

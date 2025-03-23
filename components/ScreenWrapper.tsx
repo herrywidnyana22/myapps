@@ -1,6 +1,6 @@
 import { Dimensions, Platform, StatusBar, View } from 'react-native'
 import { ScreenWrapperProps } from '@/types'
-import { colors } from '@/constants/themes'
+import { colors } from '@/styles/themes'
 
 const { height } = Dimensions.get('window')
 

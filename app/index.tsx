@@ -1,4 +1,4 @@
-import { colors } from "@/constants/themes";
+import { colors } from "@/styles/themes";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";

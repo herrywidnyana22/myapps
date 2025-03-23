@@ -54,7 +54,6 @@ export const uploadToCloudinary = async(
         }
 
     } catch (error: any) {
-        console.error("Error upload: ", error)
         return {
             success: false,
             msg: error.message || "Failed to upload file..."
@@ -74,4 +73,5 @@ export const getFilePath = (file: any) =>{
     if(file && typeof file == 'object') return file.uri
 
     return null
+
 }

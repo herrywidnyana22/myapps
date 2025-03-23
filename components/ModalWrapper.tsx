@@ -1,4 +1,4 @@
-import { colors, spacingY } from '@/constants/themes'
+import { colors, spacingY } from '@/styles/themes'
 import { ModalWrapperProps } from '@/types'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 

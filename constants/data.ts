@@ -1,5 +1,5 @@
 import { accountOptionType, CategoryType, ExpenseCategoriesType } from "@/types";
-import { colors } from "./themes";
+import { colors } from "../styles/themes";
 import { 
   ShoppingCart, 
   House, 

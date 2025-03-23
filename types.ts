@@ -96,14 +96,14 @@ export type ExpenseCategoriesType = {
 export type TransactionListType = {
   data: TransactionType[];
   title?: string;
-  loading?: boolean;
+  isLoading?: boolean;
   emptyListMessage?: string;
 }
 
 export type TransactionItemProps = {
   item: TransactionType;
   index: number;
-  handleClick: Function;
+  onClick: Function;
 }
 
 export interface InputProps extends TextInputProps {
@@ -118,7 +118,8 @@ export interface InputProps extends TextInputProps {
 export interface CustomButtonProps extends TouchableOpacityProps {
   style?: ViewStyle;
   onPress?: () => void;
-  loading?: boolean;
+  isLoading?: boolean;
+  variant?: "primary" | "delete"
   children: React.ReactNode;
 }
 
