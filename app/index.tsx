@@ -1,17 +1,7 @@
-import { colors } from "@/styles/themes";
-import { useRouter } from "expo-router";
-import { useEffect } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { colors } from "@/styles/themes"
+import { View, StyleSheet, Image } from "react-native"
 
 const index = () => {
-    // const router = useRouter()
-    
-    // useEffect(() =>{
-    //     setTimeout(() => {
-    //        router.push("/(auth)/welcome") 
-    //     }, 2000);
-    // }, [])
-
     return (
         <View
             style={styles.container}

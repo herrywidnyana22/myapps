@@ -13,7 +13,6 @@ import {
   Shirt, 
   User, 
   Ellipsis, 
-  DollarSign,
   Power, 
   Settings,
   FolderKey,
@@ -24,6 +23,7 @@ import {
   Smile,
   ChartCandlestick,
   BriefcaseBusiness,
+  CircleHelp,
 } from "lucide-react-native"
 
 export const accountOption: accountOptionType[] = [
@@ -120,6 +120,12 @@ export const expenseCategories: TransactionCategoriesType = {
     icon: Ellipsis,
     bgColor: "#525252", // Neutral Dark Gray
   },
+  uncategory: {
+    label: "Uncategorized",
+    value: "uncategory",
+    icon: CircleHelp,
+    bgColor: "#525252", // Neutral Dark Gray
+  },
 }
 
 export const incomeCategory: TransactionCategoriesType = {
@@ -152,6 +158,12 @@ export const incomeCategory: TransactionCategoriesType = {
     value: "other",
     icon: Smile,
     bgColor: "#9B51E0",
+  },
+  uncategory: {
+    label: "Uncategorized",
+    value: "uncategory",
+    icon: CircleHelp,
+    bgColor: "#525252", // Neutral Dark Gray
   },
 };
 

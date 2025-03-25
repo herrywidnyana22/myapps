@@ -7,12 +7,8 @@ export function toIdr(value?: number) {
 }
 
 export const toLabelIdr = (amount: number) => {
-    if (amount < 100000) {
-        return new Intl.NumberFormat("id-ID", {
-            style: "currency",
-            currency: "IDR",
-            minimumFractionDigits: 0,
-        }).format(amount)
+    if (amount <= 1000000) {
+        return toIdr(amount)
     }
 
     const units = [

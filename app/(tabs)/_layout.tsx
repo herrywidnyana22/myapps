@@ -1,5 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
 import { Tabs } from 'expo-router'
 import CustomTabBar from '@/components/CustomTabBar'
 
@@ -18,5 +16,3 @@ const _layout = () => {
 }
 
 export default _layout
-
-const styles = StyleSheet.create({})

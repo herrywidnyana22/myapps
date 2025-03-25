@@ -27,7 +27,7 @@ const WalletModal = () => {
     const router = useRouter()
     const params = useLocalSearchParams();
 
-    const onPreviewWallet = {
+    const selectedWallet = {
         id: params.id as string,
         name: params.name as string,
         image: typeof params.image === "string" ? JSON.parse(params.image) : null
@@ -45,8 +45,8 @@ const WalletModal = () => {
         }
         setIsLoading(true)
 
-        if(onPreviewWallet?.id) {
-            walletData.id = onPreviewWallet?.id
+        if(selectedWallet?.id) {
+            walletData.id = selectedWallet?.id
         }
         const action = await createUpdateWallet(walletData)
         
@@ -60,10 +60,10 @@ const WalletModal = () => {
     }
 
     const onDelete = async() =>{
-        if(!onPreviewWallet?.id) return
+        if(!selectedWallet?.id) return
 
         setIsLoading(true)
-        const action = await deleteWallet(onPreviewWallet?.id)
+        const action = await deleteWallet(selectedWallet?.id)
 
         setIsLoading(false)
         if(action.success){
@@ -91,10 +91,10 @@ const WalletModal = () => {
     }
 
     useEffect(() => {
-        if(onPreviewWallet?.id){
+        if(selectedWallet?.id){
             setWallet({
-                name: onPreviewWallet?.name,
-                image: onPreviewWallet?.image
+                name: selectedWallet?.name,
+                image: selectedWallet?.image
             })
         }
     }, [])
@@ -103,7 +103,7 @@ const WalletModal = () => {
         <ModalWrapper>
             <View style={styles.container}>
                 <Header
-                    title={`${onPreviewWallet?.id ? 'Update' : 'New'} Wallet`}
+                    title={`${selectedWallet?.id ? 'Update' : 'New'} Wallet`}
                     leftIcon={<BackButton/>}
                     style={{marginBottom: spacingY._10}}
                 />
@@ -132,7 +132,7 @@ const WalletModal = () => {
 
             <View style={styles.footer}>
             {
-                onPreviewWallet?.id && (
+                selectedWallet?.id && (
                     <Button
                         onPress={showDeleteAlert}
                         style={styles.deleteButton}
@@ -154,7 +154,7 @@ const WalletModal = () => {
                         color={colors.black}
                         fontWeight={'700'}
                     >
-                        {`${onPreviewWallet?.id ? 'Update' : 'Add'} Wallet`}
+                        {`${selectedWallet?.id ? 'Update' : 'Add'} Wallet`}
                     </CustomText>
                 </Button>
             </View>

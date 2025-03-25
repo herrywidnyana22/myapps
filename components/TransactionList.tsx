@@ -1,4 +1,4 @@
-import { TransactionListType } from '@/types'
+import { TransactionListType, TransactionType } from '@/types'
 import { verticalScale } from '@/utils/style'
 import { colors, spacingX } from "@/styles/themes";
 import {  View } from 'react-native'
@@ -7,6 +7,8 @@ import { FlashList } from '@shopify/flash-list'
 import TransactionItem from './TransactionItem'
 import Loading from './Loading'
 import { transactionStyles } from '@/styles/globalStyle';
+import { useRouter } from 'expo-router';
+import { Timestamp } from 'firebase/firestore';
 
 const TransactionList = ({
     data, 
@@ -15,11 +17,24 @@ const TransactionList = ({
     emptyListMessage
 }:TransactionListType) => {
 
-    const onClick = () =>{
+    const router = useRouter()
 
+    const onClick = (item: TransactionType) =>{
+        router.push({
+            pathname: "/(modals)/transactionModal",
+            params:{
+                id: item?.id,
+                uid: item?.uid,
+                walletId: item?.walletId,
+                type: item?.type,
+                amount: item?.amount.toString(),
+                category: item?.category,
+                date: (item.date as Timestamp)?.toDate()?.toISOString(),
+                description: item?.description,
+                image: JSON.stringify(item?.image),
+            }
+        })
     }
-
-    console.log({data})
     
     return (
         <View style={transactionStyles.container}>
@@ -33,20 +48,21 @@ const TransactionList = ({
                     { title }
                 </CustomText>
             )}
-            <View style={transactionStyles.list}>
-                <FlashList
-                    data={data}
-                    estimatedItemSize={60}
-                    showsVerticalScrollIndicator={false}
-                    renderItem={({item, index}) => (
-                        <TransactionItem
-                            item={item}
-                            index={index}
-                            onClick={onClick}
-                        />
-                    )}
-                />
-            </View>
+                <View style={data.length !== 0 && transactionStyles.list}>
+            
+                    <FlashList
+                        data={data}
+                        estimatedItemSize={60}
+                        showsVerticalScrollIndicator={false}
+                        renderItem={({item, index}) => (
+                            <TransactionItem
+                                item={item}
+                                index={index}
+                                onClick={onClick}
+                            />
+                        )}
+                    />
+                </View>
             {
                 !isLoading && data.length == 0 && (
                     <CustomText

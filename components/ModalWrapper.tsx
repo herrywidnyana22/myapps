@@ -1,5 +1,6 @@
 import { colors, spacingY } from '@/styles/themes'
 import { ModalWrapperProps } from '@/types'
+import { verticalScale } from '@/utils/style'
 import { Platform, StyleSheet, Text, View } from 'react-native'
 
 const ios = Platform.OS = 'ios'
@@ -23,6 +24,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         paddingTop: ios ? spacingY._15 : 20,
-        paddingBottom: ios ? spacingY._20 : spacingY._10,
+        paddingBottom: ios ? verticalScale(80) : spacingY._10,
     }
 })

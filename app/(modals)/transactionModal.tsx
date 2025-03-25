@@ -31,9 +31,9 @@ import { createUpdateTransaction } from '@/services/transactionService'
 const TransactionModal = () => {
     const { user, updateUserData } = useAuth()
     const router = useRouter()
-    const params = useLocalSearchParams()
     const ios = Platform.OS == 'ios'
     
+    const params = useLocalSearchParams()
     
     const [isLoading, setIsLoading] = useState(false)
     const [isDatePicker, setIsDatePicker] = useState(false)
@@ -59,9 +59,16 @@ const TransactionModal = () => {
         ]
     )
 
-    const onPreviewTransaction = {
+
+    const selectedTransaction:TransactionType = {
         id: params.id as string,
-        name: params.name as string,
+        uid: params.uid as string,
+        walletId: params.walletId as string,
+        type: params.type as "expense" | "income",
+        amount: Number(params.amount) || 0,
+        category: params.category as string,
+        date: params.date as string,
+        description: params.description as string,
         image: typeof params.image === "string" ? JSON.parse(params.image) : null
     }
 
@@ -86,7 +93,7 @@ const TransactionModal = () => {
             image
         } = transaction
 
-        if(!walletId || !date || !amount || (type === "expense" && !category)){
+        if(!walletId || !date || !amount || (type === "expense" && (!category || category == ""))){
             return Alert.alert("Transaction", "Please fill all the require fields!...")
         }
 
@@ -101,7 +108,9 @@ const TransactionModal = () => {
             uid: user?.uid
         }
 
-        //TODO: include transactionid for update
+        if(selectedTransaction?.id){
+            transactionData.id = selectedTransaction.id
+        }
 
         setIsLoading(true)
         const action = await createUpdateTransaction(transactionData)
@@ -115,10 +124,10 @@ const TransactionModal = () => {
     }
 
     const onDelete = async() =>{
-        if(!onPreviewTransaction?.id) return
+        if(!selectedTransaction?.id) return
 
         setIsLoading(true)
-        const action = await deleteWallet(onPreviewTransaction?.id)
+        const action = await deleteWallet(selectedTransaction?.id)
 
         setIsLoading(false)
         if(action.success){
@@ -145,11 +154,25 @@ const TransactionModal = () => {
         )
     }
 
+    useEffect(() => {
+        if(selectedTransaction?.id){
+            setTransaction({
+                walletId: selectedTransaction.walletId,
+                type: selectedTransaction.type,
+                amount: selectedTransaction.amount,
+                description: selectedTransaction.description || "",
+                category: selectedTransaction.category || "",
+                date: new Date(selectedTransaction.date as string),
+                image: selectedTransaction?.image
+            })
+        }
+    }, [])
+
     return (
         <ModalWrapper>
             <View style={styles.container}>
                 <Header
-                    title={`${onPreviewTransaction?.id ? 'Update' : 'New'} Transaction`}
+                    title={`${selectedTransaction?.id ? 'Update' : 'New'} Transaction`}
                     leftIcon={<BackButton/>}
                     style={{marginBottom: spacingY._10}}
                 />
@@ -223,8 +246,14 @@ const TransactionModal = () => {
                             itemTextStyle={styles.dropDownText}
                             itemContainerStyle={styles.dropDownItemContainer}
                             containerStyle={styles.dropDownListContainer}
-                            onChange={item => {
-                                setTransaction({...transaction, type: item.value})
+                            onChange={(item) => {
+                                setTransaction(prev => ({
+                                    ...prev,
+                                    type: item.value,
+                                    category: item.value === prev.type 
+                                        ? prev.category 
+                                        : '',
+                                }))
                             }}
                             renderItem={(item) => (
                                 <View style={styles.dropDownItem}>
@@ -403,7 +432,7 @@ const TransactionModal = () => {
 
             <View style={styles.footer}>
                 {
-                    onPreviewTransaction?.id && (
+                    selectedTransaction?.id && (
                         <Button
                             onPress={showDeleteAlert}
                             style={styles.deleteButton}
@@ -425,7 +454,7 @@ const TransactionModal = () => {
                         color={colors.black}
                         fontWeight={'700'}
                     >
-                        {`${onPreviewTransaction?.id ? 'Update' : 'Add'} Transaction`}
+                        {`${selectedTransaction?.id ? 'Update' : 'Add'} Transaction`}
                     </CustomText>
                 </Button>
             </View>
@@ -454,8 +483,6 @@ const styles = StyleSheet.create({
     },
     form:{
         gap: spacingY._20,
-        // paddingVertical: spacingY._15,
-        // paddingHorizontal: spacingY._40,
         marginTop: spacingY._15,
     },
     inputContainer:{
