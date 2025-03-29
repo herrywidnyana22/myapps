@@ -37,7 +37,7 @@ export type CustomTextProps = {
   size?: number;
   color?: string;
   fontWeight?: TextStyle["fontWeight"];
-  children: any | null;
+  children?: React.ReactNode;
   style?: TextStyle;
   textProps?: TextProps;
 }
@@ -82,6 +82,10 @@ export type TransactionType = {
   walletId: string;
 }
 
+export type TransactionWithWalletType = {
+    walletName: string
+} & TransactionType
+
 export type CategoryType = {
   label: string;
   value: string;
@@ -94,14 +98,14 @@ export type TransactionCategoriesType = {
 }
 
 export type TransactionListType = {
-  data: TransactionType[];
+  data: TransactionWithWalletType[];
   title?: string;
   isLoading?: boolean;
   emptyListMessage?: string;
 }
 
 export type TransactionItemProps = {
-  item: TransactionType;
+  item: TransactionWithWalletType;
   index: number;
   onClick: Function;
 }
@@ -175,4 +179,10 @@ export type WalletType = {
   image: any;
   uid?: string;
   created?: Date;
+}
+
+export type DeleteAlertType = {
+  onConfirm: () => void, 
+  title: string, 
+  desc: string
 }

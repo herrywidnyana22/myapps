@@ -1,7 +1,7 @@
 import { colors, spacingY } from '@/styles/themes'
 import { ModalWrapperProps } from '@/types'
 import { verticalScale } from '@/utils/style'
-import { Platform, StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
 
 const ios = Platform.OS = 'ios'
 
@@ -12,10 +12,16 @@ const ModalWrapper = ({
 }:ModalWrapperProps) => {
     
     return (
-        <View style={[styles.container, {backgroundColor: bg}, style && style]}>
-            { children }
-        </View>
+        <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1}}
+        >
+            <View style={[styles.container, {backgroundColor: bg}, style && style]}>
+                { children }
+            </View>
+        </KeyboardAvoidingView>
     )
+
 }
 
 export default ModalWrapper
@@ -24,6 +30,6 @@ const styles = StyleSheet.create({
     container:{
         flex: 1,
         paddingTop: ios ? spacingY._15 : 20,
-        paddingBottom: ios ? verticalScale(80) : spacingY._10,
+        paddingBottom: ios ? spacingY._50 : spacingY._10,
     }
 })

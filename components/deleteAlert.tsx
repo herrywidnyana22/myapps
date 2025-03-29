@@ -1,9 +1,16 @@
+import { DeleteAlertType } from '@/types';
 import { Alert } from 'react-native';
 
-export const showDeleteAlert = (onConfirm: () => void) => {
-    Alert.alert(
-        "Confirm",
-        "Are you sure to delete this transaction? \nThis action can be undone",
+
+
+export const deleteAlert = ({
+    title,
+    desc,
+    onConfirm,
+}:DeleteAlertType) => {
+    return Alert.alert(
+        title,
+        desc,
         [
             {
                 text: "Cancel",
@@ -15,5 +22,5 @@ export const showDeleteAlert = (onConfirm: () => void) => {
                 style: "destructive",
             },
         ]
-    );
-};
+    )
+}

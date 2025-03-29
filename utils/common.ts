@@ -35,7 +35,8 @@ export const getLast12Months = () => {
 
   for (let i = 11; i >= 0; i--) {
     const date = new Date();
-    date.setMonth(date.getMonth() - i);
+    date.setDate(1)
+    date.setMonth(date.getMonth() - i)
 
     const monthName = monthsOfYear[date.getMonth()];
     const shortYear = date.getFullYear().toString().slice(-2);

@@ -1,7 +1,7 @@
 import { Image } from 'expo-image'
 import { useAuth } from '@/contexts/authContext'
 import { Dropdown } from 'react-native-element-dropdown'
-import { TransactionType, WalletType } from '@/types'
+import { TransactionType, TransactionWithWalletType, WalletType } from '@/types'
 import { useEffect, useState } from 'react'
 import { colors, radius, spacingX, spacingY } from '@/styles/themes'
 import { horizontalScale, verticalScale } from '@/utils/style'
@@ -25,7 +25,9 @@ import { toIdr } from '@/utils/idrFormater'
 import { TouchableOpacity } from 'react-native'
 import { toDate } from '@/utils/dateFormater'
 import { Trash2 } from 'lucide-react-native'
-import { createUpdateTransaction } from '@/services/transactionService'
+import { createUpdateTransaction, deleteTransaction } from '@/services/transactionService'
+import { deleteAlert } from '@/components/deleteAlert'
+import { onAction } from '@/services/globalService'
 
 
 const TransactionModal = () => {
@@ -37,8 +39,9 @@ const TransactionModal = () => {
     
     const [isLoading, setIsLoading] = useState(false)
     const [isDatePicker, setIsDatePicker] = useState(false)
-    const [transaction, setTransaction] = useState<TransactionType>({
+    const [transaction, setTransaction] = useState<TransactionWithWalletType>({
         walletId: '',
+        walletName: '',
         type: 'expense',
         amount: 0,
         description: '',
@@ -60,10 +63,11 @@ const TransactionModal = () => {
     )
 
 
-    const selectedTransaction:TransactionType = {
+    const selectedTransaction:TransactionWithWalletType = {
         id: params.id as string,
         uid: params.uid as string,
         walletId: params.walletId as string,
+        walletName: params.walletName as string,
         type: params.type as "expense" | "income",
         amount: Number(params.amount) || 0,
         category: params.category as string,
@@ -123,41 +127,25 @@ const TransactionModal = () => {
         }
     }
 
-    const onDelete = async() =>{
-        if(!selectedTransaction?.id) return
-
-        setIsLoading(true)
-        const action = await deleteWallet(selectedTransaction?.id)
-
-        setIsLoading(false)
-        if(action.success){
-            router.back()
-        } else {
-            return Alert.alert("Transaction", action.msg)
-        }
-    }
-
     const showDeleteAlert = () =>{
-        return Alert.alert(
-            "Confirm",
-            "Are you sure to delete this transaction? \nThis action can be undo",
-            [
-                {
-                    text: "Cancel",
-                    style: "cancel"
-                }, {
-                    text: "Delete this transaction",
-                    onPress: () => onDelete(),
-                    style: "destructive"
-                }
-            ]
-        )
+        return deleteAlert({
+            title: "Confirm",
+            desc: "Are you sure to delete this transaction? \nThis action can be undone",
+            onConfirm: () => 
+                onAction(
+                    () => deleteTransaction(selectedTransaction.id!, selectedTransaction.walletId),
+                    setIsLoading,
+                    () => router.back(),
+                    (msg) => Alert.alert("Error", msg)
+                ),
+        })
     }
 
     useEffect(() => {
         if(selectedTransaction?.id){
             setTransaction({
                 walletId: selectedTransaction.walletId,
+                walletName: selectedTransaction.walletName,
                 type: selectedTransaction.type,
                 amount: selectedTransaction.amount,
                 description: selectedTransaction.description || "",

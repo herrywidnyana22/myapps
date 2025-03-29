@@ -13,7 +13,7 @@ const CustomText = ({
 }: CustomTextProps) => {
 
     const textStyle: TextStyle ={
-        fontSize: size ? verticalScale(size) : verticalScale(18),
+        fontSize: size ? size : 18,
         color,
         fontWeight
     }

@@ -54,7 +54,7 @@ export const createUpdateWallet = async(
 
 export const deleteWallet = async(walletID: string): Promise<ResponseType> => {
     try {
-
+        
         const getWalletID = doc(db, "wallets", walletID)
         await deleteDoc(getWalletID)
 
@@ -97,8 +97,6 @@ export const deleteTransactionByWalletId = async(walletID: string): Promise<Resp
             })
 
             await batch.commit()
-
-            console.log(`${transactionOnWallet.size} transaction deleted on this wallet`)
         }
 
 

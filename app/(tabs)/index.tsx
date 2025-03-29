@@ -4,6 +4,9 @@ import { useAuth } from '@/contexts/authContext'
 import { useRouter } from 'expo-router'
 import { Plus, Search } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
+import { startOfDay, endOfDay } from "date-fns";
+import { limit, orderBy, where } from 'firebase/firestore'
+import { getTotalExpenseIncome } from '@/utils/getAmount'
 import { colors, spacingX, spacingY } from '@/styles/themes'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
@@ -11,27 +14,29 @@ import Button from '@/components/Button'
 import HomeCard from '@/components/HomeCard'
 import CustomText from '@/components/CustomText'
 import ScreenWrapper from '@/components/ScreenWrapper'
+import BarChartVersus from '@/components/BarChartVersus'
 import TransactionList from '@/components/TransactionList'
-import useData from '@/hooks/useData'
-import { limit, orderBy, where } from 'firebase/firestore'
-import { TransactionType, WalletType } from '@/types'
+import useTransactionsWithWallets from '@/hooks/useTransactionsWithWallet'
 
 const Home = () => {
 
   const {user} = useAuth()
   const router = useRouter()
 
-  const {
-    data: recentTransactions, 
-    isLoading: transactionLoading, 
-    error
-  } = useData<TransactionType>(
-    "transactions", [
+  const today = new Date();
+  const startOfDayTimestamp = startOfDay(today).getTime()
+  const endOfDayTimestamp = endOfDay(today).getTime()
+
+  const { data: recentTransactions, isLoading: transactionLoading, error } = 
+    useTransactionsWithWallets("transactions", [
       where("uid", "==", user?.uid),
+      where("date", ">=", new Date(startOfDayTimestamp)),
+      where("date", "<", new Date(endOfDayTimestamp)),
       orderBy("date", "desc"),
-      limit(30)
-    ]
-  )
+      limit(30),
+    ])
+
+  const {totalExpense, totalIncome} = getTotalExpenseIncome(recentTransactions)
 
   return (
     <ScreenWrapper>
@@ -65,8 +70,12 @@ const Home = () => {
           <View>
             <HomeCard/>
           </View>
+          <BarChartVersus
+            expense={totalExpense}
+            income={totalIncome}
+          />
           <TransactionList
-            title='Recent Transaction'
+            title='Today Transaction'
             data={recentTransactions}
             isLoading={transactionLoading}
             emptyListMessage='No transaction...'

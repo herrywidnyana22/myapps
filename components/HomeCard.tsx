@@ -83,7 +83,7 @@ const HomeCard = () => {
                                     color={colors.neutral500}
                                     fontWeight={'500'}
                                 >
-                                    Income
+                                    Total Income
                                 </CustomText>
                                 <CustomText
                                     size={verticalScale(14)}
@@ -112,7 +112,7 @@ const HomeCard = () => {
                                     color={colors.neutral500}
                                     fontWeight={'500'}
                                 >
-                                    Expense
+                                    Total Expense
                                 </CustomText>
                                 <CustomText
                                     size={verticalScale(14)}

@@ -1,8 +1,14 @@
 import { db } from "@/config/firebase";
-import { uploadToCloudinary } from "./imageService";
-import { ResponseType, TransactionType, WalletType } from "@/types";
-import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { colors, spacingX } from "@/styles/themes";
+import { horizontalScale } from "@/utils/style";
 import { createUpdateWallet } from "./walletService";
+import { uploadToCloudinary } from "./imageService";
+import { getLast12Months, getLast7Days, getYearsRange } from "@/utils/common";
+import { ResponseType, TransactionType, TransactionWithWalletType, WalletType } from "@/types";
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
+import React from "react";
+import CustomText from "@/components/CustomText";
+import { toLabelIdr, toLabelNumber } from "@/utils/idrFormater";
 
 export const createUpdateTransaction = async(
     transactionData: Partial<TransactionType>
@@ -73,7 +79,7 @@ export const createUpdateTransaction = async(
             }
         }
     } catch (error: any) {
-        
+        console.log("Error disinikah?")
         return {
             success: false,
             msg: error.message
@@ -85,7 +91,7 @@ const updateWalletIfNewTransaction = async (
     walletId: string,
     amount: number,
     type: TransactionType['type']
-) =>{
+): Promise<ResponseType> =>{
     try {
         const getWalletId = doc(db, "wallets", walletId)
         const getWalletDataById = await getDoc(getWalletId)
@@ -138,8 +144,9 @@ const revertUpdateWallets = async (
     newTransactionAmount: number,
     newTransactionType: TransactionType['type'],
     newWalletId: string
-) =>{
+): Promise<ResponseType> =>{
     try {
+        console.log("TERIGGER REVERT")
         const getSelectedWalletId = await getDoc(doc(db, "wallets", selectedTransactionID.walletId))
         const selectedWallet = getSelectedWalletId.data() as WalletType
 
@@ -228,7 +235,7 @@ export const deleteTransaction = async(
         }
         
         console.log({transactionId})
-        console.log({getTransactionID})
+        console.log({walletId})
 
         const selectedTransaction = selectedTransactionID.data() as TransactionType
 
@@ -275,5 +282,287 @@ export const deleteTransaction = async(
             success: false,
             msg: error.message
         }
+    }
+}
+
+
+export const getWeeklyData = async(
+    uid: string,
+): Promise<ResponseType> =>{
+    try {
+        const today = new Date();
+        const aWeekAgo = new Date(today);
+        aWeekAgo.setDate(today.getDate() - 7);
+
+        // Query transactions from Firestore
+        const transactionsQuery = query(
+            collection(db, "transactions"),
+            where("uid", "==", uid),
+            where("date", ">=", Timestamp.fromDate(aWeekAgo)),
+            where("date", "<=", Timestamp.fromDate(today)),
+            orderBy("date", "desc")
+        )
+
+        const transactionDocs = await getDocs(transactionsQuery)
+        const weeklyRange = getLast7Days()
+        const transactionData: TransactionWithWalletType[] = []
+
+        const walletsQuery = collection(db, "wallets")
+        const walletDocs = await getDocs(walletsQuery)
+        const walletMap = new Map()
+        walletDocs.forEach((doc) => walletMap.set(doc.id, doc.data().name))
+
+        transactionDocs.forEach((doc) => {
+            const transaction = doc.data() as TransactionWithWalletType;
+            transaction.id = doc.id
+
+            transaction.walletName = walletMap.get(transaction.walletId) || "Unknown Wallet"
+
+            transactionData.push(transaction)
+
+            // Convert Firestore Timestamp to date string (YYYY-MM-DD)
+            const transactionDate = (transaction.date as Timestamp)
+                .toDate()
+                .toISOString()
+                .split("T")[0]
+
+            const dayData = weeklyRange.find((day) => day.date === transactionDate)
+            if (!dayData) return
+
+            if (transaction.type === "income") {
+                dayData.income += transaction.amount
+            } else {
+                dayData.expense += transaction.amount
+            }
+        });
+
+        // create bar chart params (income 5 n expense 2)
+        const statData = weeklyRange.flatMap((day) =>[
+            {
+                value: day.income,
+                label: day.day,
+                spacing: horizontalScale(4),
+                labelWidth: horizontalScale(45),
+                frontColor: colors.primary,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(day.income))
+                    ),
+            }, {
+                value: day.expense,
+                frontColor: colors.rose,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(day.expense))
+                    ),
+            },
+        ])
+
+        return{
+            success: true,
+            data: {
+                statData,
+                transactionData
+            }
+        }
+    } catch (error:any) {
+        return {
+            success: false,
+            msg: error.message
+        }
+        
+    }
+}
+
+export const getMonthlyData = async(
+    uid: string,
+): Promise<ResponseType> =>{
+    try {
+        const today = new Date();
+        const aYearAgo = new Date(today);
+        aYearAgo.setMonth(today.getMonth() - 12);
+
+        const transactionsQuery = query(
+            collection(db, "transactions"),
+            where("uid", "==", uid),
+            where("date", ">=", Timestamp.fromDate(aYearAgo)),
+            where("date", "<=", Timestamp.fromDate(today)),
+            orderBy("date", "desc")
+        )
+
+        const transactionDocs = await getDocs(transactionsQuery)
+        const monthlyRange = getLast12Months()
+        const transactionData: TransactionWithWalletType[] = []
+
+        const walletsQuery = collection(db, "wallets")
+        const walletDocs = await getDocs(walletsQuery)
+        const walletMap = new Map()
+        walletDocs.forEach((doc) => walletMap.set(doc.id, doc.data().name))
+        transactionDocs.forEach((doc) => {
+            const transaction = doc.data() as TransactionWithWalletType
+            transaction.id = doc.id
+
+            transaction.walletName = walletMap.get(transaction.walletId) || "Unknown Wallet"
+    
+            transactionData.push(transaction)
+
+            // Convert Firestore Timestamp to date string (YYYY-MM-DD)
+            const transactionDate = (transaction.date as Timestamp).toDate()
+            const shortYear = transactionDate.getFullYear().toString().slice(-2)
+            const shortMonth = transactionDate.toLocaleString('default', {
+                month: 'short'
+            })
+
+            const monthlyData = monthlyRange.find((month) => 
+                month.month === `${shortMonth} ${shortYear}`
+            )
+
+            if (!monthlyData) return
+
+            // Update income/expense stats
+            if (transaction.type === "income") {
+                monthlyData.income += transaction.amount
+            } else {
+                monthlyData.expense += transaction.amount
+            }
+        })
+
+        // create bar chart params (income 5 n expense 2)
+        const statData = monthlyRange.flatMap((month) =>[
+            {
+                value: month.income,
+                label: month.month,
+                spacing: horizontalScale(4),
+                labelWidth: horizontalScale(45),
+                frontColor: colors.primary,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(month.income))
+                    ),
+            }, {
+                value: month.expense,
+                frontColor: colors.rose,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(month.expense))
+                    ),
+            },
+        ])
+
+        return{
+            success: true,
+            data: {
+                statData,
+                transactionData
+            }
+        }
+    } catch (error:any) {
+        return {
+            success: false,
+            msg: error.message
+        }
+        
+    }
+}
+
+export const getYearlyData = async(
+    uid: string,
+): Promise<ResponseType> =>{
+    try {
+
+        const transactionsQuery = query(
+            collection(db, "transactions"),
+            where("uid", "==", uid),
+            orderBy("date", "desc")
+        )
+
+        const transactionDocs = await getDocs(transactionsQuery)
+        const transactionData: TransactionWithWalletType[] = []
+
+        const firstTransaction = transactionDocs.docs.reduce((early, doc) => {
+            const transactionDate = doc.data().date.toDate()
+            return  transactionDate < early ? transactionDate : early
+        }, new Date())
+
+        const firstYear = firstTransaction.getFullYear()
+        const currentYear = new Date().getFullYear()
+
+        const yearlyRange = getYearsRange(firstYear, currentYear)
+
+        const walletsQuery = collection(db, "wallets")
+        const walletDocs = await getDocs(walletsQuery)
+        const walletMap = new Map()
+        walletDocs.forEach((doc) => walletMap.set(doc.id, doc.data().name))
+
+        transactionDocs.forEach((doc) => {
+            const transaction = doc.data() as TransactionWithWalletType
+            transaction.id = doc.id
+
+            transaction.walletName = walletMap.get(transaction.walletId) || "Unknown Wallet"
+    
+            transactionData.push(transaction)
+
+            // Convert Firestore Timestamp to date string (YYYY-MM-DD)
+            const transactionYear = (transaction.date as Timestamp).toDate().getFullYear()
+
+            const yearlyData = yearlyRange.find((item: any) => item.year === transactionYear.toString())
+
+            if (!yearlyData) return
+
+            // Update income/expense stats
+            if (transaction.type === "income") {
+                yearlyData.income += transaction.amount
+            } else {
+                yearlyData.expense += transaction.amount
+            }
+        })
+
+        // create bar chart params (income 5 n expense 2)
+        const statData = yearlyRange.flatMap((year: any) =>[
+            {
+                value: year.income,
+                label: year.year,
+                spacing: horizontalScale(4),
+                labelWidth: horizontalScale(45),
+                frontColor: colors.primary,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(year.income))
+                    ),
+            }, {
+                value: year.expense,
+                frontColor: colors.rose,
+                topLabelComponent: () => 
+                    React.createElement(
+                        CustomText, 
+                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        String(toLabelNumber(year.expense))
+                    ),
+            },
+        ])
+
+        return{
+            success: true,
+            data: {
+                statData,
+                transactionData
+            }
+        }
+    } catch (error:any) {
+        return {
+            success: false,
+            msg: error.message
+        }
+        
     }
 }
