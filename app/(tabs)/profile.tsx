@@ -1,24 +1,31 @@
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
-import ScreenWrapper from '@/components/ScreenWrapper'
-import { colors, radius, spacingX, spacingY } from '@/styles/themes'
-import { verticalScale } from '@/utils/style'
-import Header from '@/components/Header'
-import BackButton from '@/components/BackButton'
-import CustomText from '@/components/CustomText'
-import { useAuth } from '@/contexts/authContext'
-import {Image} from "expo-image"
-import { getAvatar } from '@/services/imageService'
-import { accountOptionType } from '@/types'
-import { ChevronRight, Power, Settings, User } from 'lucide-react-native'
-import { accountOption } from '@/constants/data'
-import Animated, { FadeInDown } from 'react-native-reanimated'
-import { signOut } from 'firebase/auth'
 import { auth } from '@/config/firebase'
+import { Image } from "expo-image"
+import { useAuth } from '@/contexts/authContext'
+import { signOut } from 'firebase/auth'
+import { useTheme } from '@/contexts/themeContext'
+import { spacingY } from '@/styles/themes'
 import { useRouter } from 'expo-router'
+import { getAvatar } from '@/services/imageService'
+import { profileStyle } from '@/styles/tabs/tabStyles'
+import { ChevronRight } from 'lucide-react-native'
+import { accountOption } from '@/constants/data'
+import { verticalScale } from '@/utils/style'
+import { accountOptionType } from '@/types'
+import { Alert, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
+
+import Header from '@/components/Header'
+import CustomText from '@/components/CustomText'
+import BackButton from '@/components/BackButton'
+import ScreenWrapper from '@/components/ScreenWrapper'
 
 const Profile = () => {
   const router = useRouter()
   const {user} = useAuth()
+
+  const {colors} = useTheme()
+  const styles = profileStyle(colors)
+
   const onLogout = async() =>{
     await signOut(auth)
   }
@@ -129,62 +136,3 @@ const Profile = () => {
 }
 
 export default Profile
-
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    paddingHorizontal: spacingX._20
-  },
-  userInfo:{
-    alignItems: 'center',
-    gap: spacingY._15,
-    marginTop: verticalScale(30),
-  },
-  avatar:{
-    height: verticalScale(135),
-    width: verticalScale(135),
-    alignSelf: 'center',
-    borderRadius: 200,
-    backgroundColor: colors.neutral300
-  },
-  editIcon:{
-    position: 'absolute',
-    bottom: verticalScale(5),
-    right: 8,
-    padding: 5,
-    borderRadius: 50,
-    backgroundColor: colors.neutral300,
-    shadowColor: colors.black,
-    shadowOffset:{
-      height: 0,
-      width: 0,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 4,
-  },
-  nameContainer:{
-    gap:verticalScale(4),
-    alignItems: 'center'
-  },
-  listIcon:{
-    height: verticalScale(40),
-    width: verticalScale(40),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius._15,
-    borderCurve: 'continuous',
-    backgroundColor: colors.neutral500,
-  },
-  listItem:{
-    marginBottom: verticalScale(17),
-  },
-  accountOption:{
-    marginTop: spacingY._35
-  },
-  flexRow:{
-    flexDirection: 'row',
-    alignItems:'center',
-    gap: spacingX._10
-  }
-})

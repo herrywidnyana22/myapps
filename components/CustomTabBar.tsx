@@ -1,12 +1,18 @@
-import { View, TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
-import { colors, spacingY } from '@/styles/themes';
+import { spacingY } from '@/styles/themes';
 import { verticalScale } from '@/utils/style';
 import { ChartNoAxesCombined, Home, User, Wallet } from 'lucide-react-native';
+
+import { useTheme } from '@/contexts/themeContext';
+import { tabBarStyle } from '@/styles/tabs/tabStyles';
 
 import CustomText from './CustomText';
 
 const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
+
+    const { colors } = useTheme()
+    const styles = tabBarStyle(colors)
 
     const tabIcons: any ={
         index: (isFocused: boolean) =>(
@@ -79,7 +85,6 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
                         { tabIcons[route.name] && tabIcons[route.name](isFocused) }
                         <CustomText 
                             size={11}
-                            color={colors.white}
                             style={{
                                 textTransform:'capitalize', 
                                 marginTop: spacingY._5,
@@ -100,23 +105,3 @@ const CustomTabBar = ({ state, descriptors, navigation }: BottomTabBarProps)=> {
 }
 
 export default CustomTabBar
-
-
-const styles = StyleSheet.create({
-    tabbar:{
-        width: '100%',
-        height: Platform.OS == 'ios' ? verticalScale(72) : verticalScale(55),
-        flexDirection:'row',
-        gap: 2,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        backgroundColor: colors.neutral800,
-        borderTopColor: colors.neutral700,
-        borderTopWidth: 1,
-    },
-    tabbarItem:{
-        alignItems:'center',
-        justifyContent: 'center',
-        marginBottom: Platform.OS == 'ios' ? spacingY._10 : spacingY._5,
-    }
-})

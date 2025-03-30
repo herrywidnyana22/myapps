@@ -1,6 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { HeaderProps } from '@/types'
 import CustomText from './CustomText'
+import { useTheme } from '@/contexts/themeContext'
 
 const Header = ({
     title,
@@ -8,6 +9,18 @@ const Header = ({
     leftIcon,
     rightIcon
 }:HeaderProps) => {
+  const { colors } = useTheme()
+
+  const styles = StyleSheet.create({
+    container:{
+        width: '100%',
+        alignItems: 'center',
+        flexDirection: 'row',
+    },
+    leftIcon:{
+        alignSelf: 'flex-start',
+    }
+})
   return (
     <View
         style={[styles.container, style]}
@@ -17,6 +30,7 @@ const Header = ({
         <CustomText
             size={22}
             fontWeight={'600'}
+            color={colors.white}
             style={{
                 width: leftIcon ? "82%" : '100%',
                 textAlign:'center',
@@ -31,13 +45,3 @@ const Header = ({
 
 export default Header
 
-const styles = StyleSheet.create({
-    container:{
-        width: '100%',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    leftIcon:{
-        alignSelf: 'flex-start',
-    }
-})

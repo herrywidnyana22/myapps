@@ -1,25 +1,30 @@
-import { Alert, StyleSheet, View } from 'react-native'
-import { colors, radius, spacingX, spacingY } from '@/styles/themes'
-import { horizontalScale, verticalScale } from '@/utils/style'
-import { useEffect, useState } from 'react'
-import { BarChart } from "react-native-gifted-charts";
-
-import ScreenWrapper from '@/components/ScreenWrapper'
-import Header from '@/components/Header'
-import SegmentedControl from '@react-native-segmented-control/segmented-control'
-import Loading from '@/components/Loading';
-import CustomText from '@/components/CustomText';
 import { useAuth } from '@/contexts/authContext';
-import { getMonthlyData, getWeeklyData, getYearlyData } from '@/services/transactionService';
-import TransactionList from '@/components/TransactionList';
+import { useTheme } from '@/contexts/themeContext';
+import { spacingY } from '@/styles/themes'
+import { BarChart } from "react-native-gifted-charts";
+import { Alert, View } from 'react-native'
 import { ResponseType } from "@/types";
-import BarChartVersus from '@/components/BarChartVersus';
-import { getTotalExpenseIncome } from '@/utils/getAmount';
 import { toLabelNumber } from '@/utils/idrFormater';
+import { statisticStyle } from '@/styles/tabs/tabStyles';
+import { useEffect, useState } from 'react'
+import { getTotalExpenseIncome } from '@/utils/getAmount';
+import { horizontalScale, verticalScale } from '@/utils/style'
+import { getMonthlyData, getWeeklyData, getYearlyData } from '@/services/transactionService';
+
+
+import Header from '@/components/Header'
+import Loading from '@/components/Loading';
+import ScreenWrapper from '@/components/ScreenWrapper'
+import BarChartVersus from '@/components/BarChartVersus';
+import TransactionList from '@/components/TransactionList';
+import SegmentedControl from '@react-native-segmented-control/segmented-control'
 
 const Statistic = () => {
 
   const {user}= useAuth()
+  
+  const { colors } = useTheme()
+  const styles = statisticStyle(colors)
 
   const [chartData, setChartData] = useState([])
   const [transactions, setTransactions] = useState([])
@@ -39,8 +44,8 @@ const Statistic = () => {
     setIsLoading(false)
 
     if(!response.success){
-      // return Alert.alert("Error", "Error to get statistic data")
-      return Alert.alert("Error", response?.msg)
+      return Alert.alert("Error", "Error to get statistic data")
+      // return Alert.alert("Error", response?.msg)
     }
 
     setChartData(response?.data?.statData)
@@ -49,13 +54,13 @@ const Statistic = () => {
 
   useEffect(() => {
     if(activeSegmentIndex === 0){
-      getStat(() => getWeeklyData(user?.uid as string))
+      getStat(() => getWeeklyData(user?.uid as string, colors))
     }
     if(activeSegmentIndex === 1){
-      getStat(() => getMonthlyData(user?.uid as string))
+      getStat(() => getMonthlyData(user?.uid as string, colors))
     }
     if(activeSegmentIndex === 2){
-      getStat(() => getYearlyData(user?.uid as string))
+      getStat(() => getYearlyData(user?.uid as string, colors))
     }
   }, [activeSegmentIndex])
 
@@ -94,18 +99,9 @@ const Statistic = () => {
                     ? horizontalScale(25)
                     : horizontalScale(16)
                   }
-                  // yAxisLabelPrefix='Rp.'
-                  // yAxisTextStyle={{
-                  //   color: colors.neutral300,
-                  //   fontSize: verticalScale(9)
-                  // }}
                   yAxisThickness={0}
                   xAxisThickness={0}
                   yAxisLabelWidth={0}
-                  // yAxisLabelWidth={[1, 2].includes(activeSegmentIndex)
-                  //   ? horizontalScale(38)
-                  //   : horizontalScale(35)
-                  // }
                   formatYLabel={toLabelNumber}
                   xAxisLabelTextStyle={{
                     color: colors.neutral300,
@@ -151,52 +147,3 @@ const Statistic = () => {
 }
 
 export default Statistic
-
-const styles = StyleSheet.create({
-  container: {
-    gap: spacingY._10,
-    paddingHorizontal: spacingX._20,
-    paddingVertical: spacingY._5,
-  },
-  scrollContainer:{
-    gap: spacingY._20,
-    paddingTop: spacingY._5,
-    paddingBottom: verticalScale(100)
-  },
-  chartContainer:{
-    position: 'relative',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chartLoadingContainer:{
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    borderRadius: radius._12,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  header:{
-
-  },
-  noChart:{
-    height: verticalScale(210),
-    backgroundColor: 'rgba(0,0,0,0.6)',
-  },
-  searchIcon:{
-    height: verticalScale(35),
-    width: verticalScale(35),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 100,
-    borderCurve: 'continuous',
-    backgroundColor: colors.neutral700,
-  },
-  segmentStyle:{
-    height: horizontalScale(37),
-  },
-  segmentFontStyle:{
-    fontSize: verticalScale(13),
-    fontWeight: 'bold',
-    color: colors.black,
-  }
-})

@@ -1,5 +1,5 @@
 import { db } from "@/config/firebase";
-import { colors, spacingX } from "@/styles/themes";
+import { spacingX } from "@/styles/themes";
 import { horizontalScale } from "@/utils/style";
 import { createUpdateWallet } from "./walletService";
 import { uploadToCloudinary } from "./imageService";
@@ -8,7 +8,7 @@ import { ResponseType, TransactionType, TransactionWithWalletType, WalletType } 
 import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, Timestamp, updateDoc, where } from "firebase/firestore";
 import React from "react";
 import CustomText from "@/components/CustomText";
-import { toLabelIdr, toLabelNumber } from "@/utils/idrFormater";
+import { toLabelNumber } from "@/utils/idrFormater";
 
 export const createUpdateTransaction = async(
     transactionData: Partial<TransactionType>
@@ -288,6 +288,7 @@ export const deleteTransaction = async(
 
 export const getWeeklyData = async(
     uid: string,
+    colors: any
 ): Promise<ResponseType> =>{
     try {
         const today = new Date();
@@ -347,7 +348,7 @@ export const getWeeklyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(day.income))
                     ),
             }, {
@@ -356,7 +357,7 @@ export const getWeeklyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(day.expense))
                     ),
             },
@@ -380,6 +381,7 @@ export const getWeeklyData = async(
 
 export const getMonthlyData = async(
     uid: string,
+    colors: any
 ): Promise<ResponseType> =>{
     try {
         const today = new Date();
@@ -442,7 +444,7 @@ export const getMonthlyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(month.income))
                     ),
             }, {
@@ -451,7 +453,7 @@ export const getMonthlyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(month.expense))
                     ),
             },
@@ -475,6 +477,7 @@ export const getMonthlyData = async(
 
 export const getYearlyData = async(
     uid: string,
+    colors: any
 ): Promise<ResponseType> =>{
     try {
 
@@ -536,7 +539,7 @@ export const getYearlyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(year.income))
                     ),
             }, {
@@ -545,7 +548,7 @@ export const getYearlyData = async(
                 topLabelComponent: () => 
                     React.createElement(
                         CustomText, 
-                        { size: 8, color: colors.white, style:{marginBottom:spacingX._3} }, 
+                        { size: 8, color: colors.neutral200, style:{marginBottom:spacingX._3} }, 
                         String(toLabelNumber(year.expense))
                     ),
             },

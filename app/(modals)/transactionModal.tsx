@@ -28,12 +28,17 @@ import { Trash2 } from 'lucide-react-native'
 import { createUpdateTransaction, deleteTransaction } from '@/services/transactionService'
 import { deleteAlert } from '@/components/deleteAlert'
 import { onAction } from '@/services/globalService'
+import { useTheme } from '@/contexts/themeContext'
+import { transactionModalStyle } from '@/styles/modals/modalStyles'
 
 
 const TransactionModal = () => {
-    const { user, updateUserData } = useAuth()
+    const { user } = useAuth()
     const router = useRouter()
     const ios = Platform.OS == 'ios'
+
+    const { colors } = useTheme()
+    const styles = transactionModalStyle(colors)
     
     const params = useLocalSearchParams()
     
@@ -354,7 +359,7 @@ const TransactionModal = () => {
                                     onPress={() => setIsDatePicker(true)}
                                     style={styles.dateInput}
                                 >
-                                    <CustomText>
+                                    <CustomText color={colors.neutral200}>
                                         {toDate(transaction.date)}
                                     </CustomText>
                                 </Pressable>
@@ -380,6 +385,7 @@ const TransactionModal = () => {
                                                     <CustomText
                                                         size={verticalScale(16)}
                                                         fontWeight={'500'}
+                                                        color={colors.neutral200}
                                                     >
                                                         OK
                                                     </CustomText>
@@ -451,149 +457,3 @@ const TransactionModal = () => {
 }
 
 export default TransactionModal
-
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingHorizontal: spacingY._20,
-    },
-    footer:{
-        flexDirection: 'row',
-        gap: horizontalScale(12),
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: spacingX._20,
-        paddingTop: spacingY._15,
-        borderTopColor: colors.neutral700,
-        marginBottom: spacingY._5,
-        borderTopWidth: 1
-    },
-    form:{
-        gap: spacingY._20,
-        marginTop: spacingY._15,
-    },
-    inputContainer:{
-        gap: spacingY._10,
-    },
-    iosDropDown:{
-        height: verticalScale(54),
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: verticalScale(14),
-        color: colors.white,
-        borderColor: colors.neutral300,
-        borderWidth: 1,
-        borderRadius: radius._17,
-        borderCurve: 'continuous',
-        paddingHorizontal: spacingX._15
-    },
-    androidDropDown:{
-        height: verticalScale(54),
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: verticalScale(14),
-        color: colors.white,
-        borderColor: colors.neutral300,
-        borderWidth: 1,
-        borderRadius: radius._17,
-        borderCurve: 'continuous',
-        paddingHorizontal: spacingX._15
-    },
-    flexRow:{
-        flexDirection:'row',
-        gap: spacingX._5,
-        alignItems: 'center',
-    },
-    dateInput:{
-        height: verticalScale(54),
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderRadius: radius._17,
-        borderColor: colors.neutral300,
-        borderCurve: 'continuous',
-        paddingHorizontal: spacingX._15
-    },
-    iosDatePicker:{
-        
-    },
-    datePickerButton:{
-        height: verticalScale(35),
-        alignItems: 'center',
-        justifyContent:'center',
-        padding: spacingY._7,
-        paddingHorizontal: spacingY._15,
-        marginRight: spacingX._7,
-        backgroundColor: colors.neutral700,
-        borderRadius: radius._15,
-    },
-    dropDownContainer:{
-        height: verticalScale(54),
-        borderWidth: 1,
-        borderColor: colors.neutral300,
-        paddingHorizontal: spacingY._15,
-        borderRadius: radius._15,
-        borderCurve: 'continuous',
-    },
-    dropDownText:{
-        color: colors.white,
-    },
-    dropDownSelectedText:{
-        color: colors.white,
-        fontSize: verticalScale(14),
-    },
-    dropDownListContainer:{
-        top: 5,
-        borderRadius: radius._15,
-        borderCurve: 'continuous',
-        paddingVertical: spacingY._7,
-        borderColor: colors.neutral500,
-        shadowColor: colors.black,
-        shadowOffset: {
-            width: 0,
-            height: verticalScale(5)
-        },
-        opacity: 1,
-        shadowRadius: radius._15,
-        elevation: 15,
-        backgroundColor: colors.neutral900,
-    },
-    dropDownPlaceholder:{
-        color: colors.white
-    },
-    dropDownItemContainer:{
-        marginHorizontal: spacingX._7,
-        borderRadius: radius._15,
-    },
-    dropDownItem: {
-        flexDirection: "row",
-        gap: spacingY._5,
-        alignItems: "center",
-        paddingVertical: spacingX._15,
-        paddingHorizontal: spacingY._15,
-    },
-    iconContainer: {
-        width: horizontalScale(30),
-        height: verticalScale(30), 
-        borderRadius: radius._10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: spacingY._7,
-    },
-    dropDownIcon:{
-        height: verticalScale(30),
-        tintColor: colors.neutral300,
-    },
-    descriptionInput:{
-        height: verticalScale(100),
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        paddingVertical: spacingX._15,
-    },
-    deleteButton:{
-        backgroundColor: colors.rose,
-        paddingHorizontal: spacingX._15,
-    }
-})

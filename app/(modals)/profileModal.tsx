@@ -2,14 +2,16 @@
 import { Image } from 'expo-image'
 import { Pencil } from 'lucide-react-native'
 import { useAuth } from '@/contexts/authContext'
+import { spacingY } from '@/styles/themes'
+import { useTheme } from '@/contexts/themeContext'
 import { getAvatar } from '@/services/imageService'
 import { useRouter } from 'expo-router'
 import { updateUser } from '@/services/userService'
 import { UserDataType } from '@/types'
+import { verticalScale } from '@/utils/style'
+import { profileModalStyle } from '@/styles/modals/modalStyles'
 import { useEffect, useState } from 'react'
-import { colors, spacingX, spacingY } from '@/styles/themes'
-import { horizontalScale, verticalScale } from '@/utils/style'
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, ScrollView, TouchableOpacity, View } from 'react-native'
 
 import * as ImagePicker from 'expo-image-picker'
 
@@ -29,6 +31,9 @@ const ProfileModal = () => {
 
     const { user, updateUserData } = useAuth()
     const router = useRouter()
+
+    const { colors } = useTheme()
+    const styles = profileModalStyle(colors)
 
     useEffect(() =>{
         setUserData({
@@ -127,54 +132,3 @@ const ProfileModal = () => {
 }
 
 export default ProfileModal
-
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingHorizontal: spacingY._20,
-    },
-    footer:{
-        flexDirection: 'row',
-        gap: horizontalScale(12),
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: spacingX._20,
-        paddingTop: spacingY._15,
-        borderTopColor: colors.neutral700,
-        marginBottom: spacingY._5,
-        borderTopWidth: 1
-    },
-    form:{
-        marginTop: spacingY._15,
-        gap: spacingY._30
-    },
-    avatarContainer:{
-        position: 'relative',
-        alignSelf: 'center'
-    },
-    avatar:{
-        width: verticalScale(130),
-        height: verticalScale(130),
-        alignSelf: 'center',
-        borderRadius: 200,
-        borderWidth: 1,
-        borderColor: colors.neutral500
-    },
-    editIcon:{
-        position: 'absolute',
-        bottom: spacingY._5,
-        right: spacingY._7,
-        padding: spacingY._7,
-        borderRadius: 100,
-        backgroundColor: colors.neutral100,
-        shadowColor: colors.black,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 4,
-    },
-    inputContainer:{
-        gap: spacingY._10
-    }
-})

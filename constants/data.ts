@@ -1,4 +1,4 @@
-import { accountOptionType, CategoryType, TransactionCategoriesType } from "@/types";
+import { accountOptionType, TransactionCategoriesType } from "@/types";
 import { colors } from "../styles/themes";
 import { 
   ShoppingCart, 
@@ -39,7 +39,7 @@ export const accountOption: accountOptionType[] = [
   }, {
     title: 'Privacy & Policy',
     icon: FolderKey,
-    bgColor: colors.neutral600
+    bgColor: '#525252'
   }, {
     title: 'Logout',
     icon: Power,
@@ -172,12 +172,12 @@ export const transactionTypes = [
     label: "Expense", 
     value: "expense" ,
     icon: ArrowUp,
-    bgColor: colors.rose
+    bgColor: '#ef4444'
   },
   { 
     label: "Income", 
     value: "income",
     icon: ArrowDown,
-    bgColor: colors.green
+    bgColor: '#16a34a'
   },
 ];

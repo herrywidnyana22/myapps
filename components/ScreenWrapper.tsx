@@ -1,10 +1,12 @@
 import { Dimensions, Platform, StatusBar, View } from 'react-native'
 import { ScreenWrapperProps } from '@/types'
-import { colors } from '@/styles/themes'
+import { useTheme } from '@/contexts/themeContext'
 
 const { height } = Dimensions.get('window')
 
 const ScreenWrapper = ({style, children}: ScreenWrapperProps) => {
+    const { colors } = useTheme()
+    
     let paddingTop = Platform.OS == 'ios'
     ? height * 0.06
     : 0

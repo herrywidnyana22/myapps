@@ -1,7 +1,11 @@
-import { colors } from "@/styles/themes"
-import { View, StyleSheet, Image } from "react-native"
+import { useTheme } from "@/contexts/themeContext";
+import { indexStyles } from "@/styles/styles";
+import { View, Image } from "react-native"
 
-const index = () => {
+const Index = () => {
+    const { colors } = useTheme()
+    const styles = indexStyles(colors)
+    
     return (
         <View
             style={styles.container}
@@ -15,18 +19,4 @@ const index = () => {
     );
 }
  
-export default index;
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: colors.neutral900
-    },
-    
-    logo:{
-        height: '20%',
-        aspectRatio: 1
-    }
-})
+export default Index

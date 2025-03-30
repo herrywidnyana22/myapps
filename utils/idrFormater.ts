@@ -7,7 +7,7 @@ export function toIdr(value?: number) {
 }
 
 export const toLabelIdr = (amount: number) => {
-    if (Math.abs(amount) <= 1000000) {
+    if (Math.abs(amount) < 1000000) {
         return toIdr(amount);
     }
 

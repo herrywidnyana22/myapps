@@ -1,23 +1,30 @@
-import { expenseCategories, incomeCategory } from '@/constants/data';
-import { transactionStyles } from '@/styles/globalStyle';
-import { colors, radius, spacingX, spacingY } from '@/styles/themes';
-import { TransactionItemProps } from '@/types';
-import { verticalScale } from '@/utils/style';
+import * as Haptics from 'expo-haptics';
+
+import { View } from 'react-native';
+import { useRef } from 'react';
+import { useTheme } from '@/contexts/themeContext';
+import { onAction } from '@/services/globalService';
 import { Timestamp } from 'firebase/firestore';
-import { StyleSheet, View } from 'react-native';
-import { GestureHandlerRootView, RectButton } from 'react-native-gesture-handler';
-import ReanimatedSwipeable, { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { deleteAlert } from './deleteAlert';
+import { verticalScale } from '@/utils/style';
+import { deleteTransaction } from '@/services/transactionService';
+import { toIdr, toLabelIdr } from '@/utils/idrFormater';
+import { TransactionItemProps } from '@/types';
+import { Trash2, SquarePen, Wallet } from 'lucide-react-native';
+import { expenseCategories, incomeCategory } from '@/constants/data';
+import { RectButton } from 'react-native-gesture-handler';
+
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import CustomText from './CustomText';
-import { toIdr, toLabelIdr } from '@/utils/idrFormater';
-import { Trash2, SquarePen, Wallet } from 'lucide-react-native';
-import { useRef } from 'react';
-import * as Haptics from 'expo-haptics';
-import { deleteAlert } from './deleteAlert';
-import { onAction } from '@/services/globalService';
-import { deleteTransaction } from '@/services/transactionService';
+import ReanimatedSwipeable, { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
+import { transactionItemStyles, transactionStyles } from '@/styles/tabs/tabStyles';
 
 const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
+
+    const { colors } = useTheme()
+    const styles = transactionItemStyles(colors)
+    const transactionStyle = transactionStyles(colors)
+
     let categoryKey = item?.category && item.category !== "" ? item.category : "uncategory";
     let category = item?.type === "income"
         ? incomeCategory[categoryKey]
@@ -28,7 +35,6 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
         day: 'numeric',
         month: 'short',
     })
-
 
     const swipeableRef = useRef<SwipeableMethods | null>(null);
    
@@ -48,11 +54,11 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                 <RectButton style={[styles.actionButton, styles.deleteAction]}>
                     <CustomText 
                         size={verticalScale(14)}
-                        color={colors.neutral200}
+                        color={'white'}
                     >
                         Delete
                     </CustomText>
-                    <Trash2 size={24} color={colors.white} />
+                    <Trash2 size={24} color={'white'} />
                 </RectButton>
             </View>
         );
@@ -62,10 +68,10 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
         return (
             <View style={styles.actionContainer}>
                 <RectButton style={[styles.actionButton, styles.markAsReadAction]}>
-                    <SquarePen size={24} color={colors.white} />
+                    <SquarePen size={24} color={'white'} />
                     <CustomText 
                         size={verticalScale(14)}
-                        color={colors.neutral200}
+                        color={'white'}
                     >
                         Edit
                     </CustomText>
@@ -75,7 +81,6 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
     };
 
     return (
-    <>    
         <Animated.View 
             entering={ FadeInDown
                 .delay(index * 100)
@@ -84,7 +89,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
             }
             style={{ overflow: 'visible' }}
         >
-            <GestureHandlerRootView>
+            <View style={{flex: 1}}>
                 <ReanimatedSwipeable
                     ref={swipeableRef}
                     friction={2}
@@ -105,27 +110,27 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                         }
                     }}
                 >
-                    <View style={transactionStyles.walletLabel}>
+                    <View style={transactionStyle.walletLabel}>
                         <Wallet
                             size={14}
-                            color={colors.neutral200}
+                            color='white'
                         />
                         <CustomText 
                             size={13}
-                            color={colors.neutral200}
+                            color='white'
                         >
                             { item.walletName}
                         </CustomText>
                     </View>
-                    <View style={transactionStyles.row}>
-                        <View style={[transactionStyles.icon, { backgroundColor: category.bgColor }]}> 
+                    <View style={transactionStyle.row}>
+                        <View style={{...transactionStyle.icon, backgroundColor: category.bgColor }}> 
                             {Icon && (
-                                <Icon size={25} color={colors.white} />
+                                <Icon size={25} color="white" />
                             )}
                         </View>
 
-                        <View style={transactionStyles.categoryDesc}>
-                            <CustomText size={(17)}>
+                        <View style={transactionStyle.categoryDesc}>
+                            <CustomText size={(17)} color={colors.white}>
                                 {item?.description}
                             </CustomText>
                             <CustomText
@@ -137,7 +142,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                             </CustomText>
                         </View>
 
-                        <View style={transactionStyles.amountDate}>
+                        <View style={transactionStyle.amountDate}>
                             <CustomText
                                 color={item?.type === "expense" ? colors.rose : colors.primary}
                                 fontWeight={'600'}
@@ -159,45 +164,9 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                     </View>
                             
                 </ReanimatedSwipeable>
-            </GestureHandlerRootView>
+            </View>
         </Animated.View>
-    </>
     )
 }
 
-export default TransactionItem;
-
-const styles = StyleSheet.create({
-    actionContainer: {
-        flex: 1,
-        height: verticalScale(62),
-        justifyContent: 'center',
-        marginTop: spacingY._5,
-    },
-    actionButton: {
-        flex: 1,
-        gap: spacingX._5,
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: radius._17,
-        paddingHorizontal: spacingX._12,
-    },
-    deleteAction: {
-        justifyContent: 'flex-end',
-        backgroundColor: colors.rose,
-    },
-    markAsReadAction: {
-        alignItems: 'center',
-        backgroundColor: colors.green,
-    },
-    actionText: {
-        color: colors.white,
-        fontSize: 10,
-        fontWeight: 'bold',
-    },
-
-    actionIcon:{
-        paddingRight: spacingX._5,
-        marginLeft: spacingX._5,
-    }
-});
+export default TransactionItem

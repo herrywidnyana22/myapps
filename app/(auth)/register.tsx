@@ -1,26 +1,32 @@
+import { useAuth } from '@/contexts/authContext'
+import { useTheme } from '@/contexts/themeContext'
+import { spacingY } from '@/styles/themes'
 import { useRouter } from 'expo-router'
-import { useRef, useState } from 'react'
-import { Alert, Pressable, StyleSheet, View } from 'react-native'
-import { KeyRound, Mail, User } from 'lucide-react-native'
-
 import { verticalScale } from '@/utils/style'
-import { colors, spacingX, spacingY } from '@/styles/themes'
+import { registerStyle } from '@/styles/auth/authStyles'
+import { useRef, useState } from 'react'
+import { KeyRound, Mail, User } from 'lucide-react-native'
+import { Alert, Pressable, View } from 'react-native'
+
 
 import Input from '@/components/Input'
 import Button from '@/components/Button'
 import BackButton from '@/components/BackButton'
 import CustomText from '@/components/CustomText'
 import ScreenWrapper from '@/components/ScreenWrapper'
-import { useAuth } from '@/contexts/authContext'
 
 const Register = () => {
-    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     
     const nameRef = useRef("")
     const emailRef = useRef("")
     const passwordRef = useRef("")
     const { register } = useAuth()
+
+    const { colors } = useTheme()
+    const styles = registerStyle(colors)
+
+    const [isLoading, setIsLoading] = useState(false)
 
 
     const onSubmit = async () =>{
@@ -139,35 +145,3 @@ const Register = () => {
 }
 
 export default Register
-
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        gap: spacingY._30,
-        paddingHorizontal: spacingX._20
-    },
-    welcomeText:{
-        fontSize: verticalScale(20),
-        fontWeight: 'bold',
-        color: colors.text
-    },
-    form:{
-        gap: spacingX._20
-    },
-    forgotPass:{
-        textAlign: 'right',
-        fontWeight: '500',
-        color: colors.text
-    },
-    footer:{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 5
-    },
-    footerText:{
-        textAlign: 'center',
-        color: colors.text,
-        fontSize: verticalScale(15)
-    }
-})

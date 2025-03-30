@@ -1,17 +1,19 @@
+import { useAuth } from '@/contexts/authContext'
+import { useTheme } from '@/contexts/themeContext'
+import { spacingY } from '@/styles/themes'
 import { useRouter } from 'expo-router'
-import { useRef, useState } from 'react'
-import { Alert, Pressable, StyleSheet, View } from 'react-native'
-import { KeyRound, Mail } from 'lucide-react-native'
-
+import { loginStyles } from '@/styles/auth/authStyles'
 import { verticalScale } from '@/utils/style'
-import { colors, spacingX, spacingY } from '@/styles/themes'
+import { KeyRound, Mail } from 'lucide-react-native'
+import { useRef, useState } from 'react'
+import { Alert, Pressable, View } from 'react-native'
 
+
+import Button from '@/components/Button'
+import Input from '@/components/Input'
 import CustomText from '@/components/CustomText'
 import BackButton from '@/components/BackButton'
-import Input from '@/components/Input'
-import Button from '@/components/Button'
 import ScreenWrapper from '@/components/ScreenWrapper'
-import { useAuth } from '@/contexts/authContext'
 
 const Login = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -21,6 +23,8 @@ const Login = () => {
 
     const {login} = useAuth()
 
+    const {colors} = useTheme()
+    const styles = loginStyles(colors)
 
     const onSubmit = async () =>{
         if(!emailRef.current || !passwordRef.current){
@@ -133,35 +137,3 @@ const Login = () => {
 }
 
 export default Login
-
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        gap: spacingY._30,
-        paddingHorizontal: spacingX._20
-    },
-    welcomeText:{
-        fontSize: verticalScale(20),
-        fontWeight: 'bold',
-        color: colors.text
-    },
-    form:{
-        gap: spacingX._20
-    },
-    forgotPass:{
-        textAlign: 'right',
-        fontWeight: '500',
-        color: colors.text
-    },
-    footer:{
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 5
-    },
-    footerText:{
-        textAlign: 'center',
-        color: colors.text,
-        fontSize: verticalScale(15)
-    }
-})

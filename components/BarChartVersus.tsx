@@ -1,7 +1,8 @@
+import { View } from "react-native";
+import { useTheme } from "@/contexts/themeContext";
+import { spacingY } from "@/styles/themes";
 import { toLabelIdr } from "@/utils/idrFormater";
-import { verticalScale } from "@/utils/style";
-import { View, StyleSheet } from "react-native";
-import { colors, radius, spacingX, spacingY } from "@/styles/themes";
+import { barChartVersusStyle } from "@/styles/charts/chartStyles";
 
 import CustomText from "./CustomText";
 
@@ -11,6 +12,9 @@ type DataBarType = {
 };
 
 const BarChartVersus = ({ expense, income }: DataBarType) => {
+    const { colors } = useTheme()
+    const styles = barChartVersusStyle(colors)
+
     const totalDaily = expense + income;
     const expensePercentage = Math.round((expense / totalDaily) * 1000) / 10;
     const incomePercentage = Math.round((income / totalDaily) * 1000) / 10;
@@ -21,6 +25,7 @@ const BarChartVersus = ({ expense, income }: DataBarType) => {
                 <View style={{gap: spacingY._5}}>
                     <CustomText 
                         fontWeight={'500'}
+                        color={colors.neutral200}
                     >
                         Expense
                     </CustomText>
@@ -28,6 +33,7 @@ const BarChartVersus = ({ expense, income }: DataBarType) => {
                  <View style={{gap: spacingY._5, alignItems:'flex-end'}}>
                     <CustomText 
                         fontWeight={'500'}
+                        color={colors.neutral200}
                     >
                         Income
                     </CustomText>
@@ -96,48 +102,3 @@ const BarChartVersus = ({ expense, income }: DataBarType) => {
 };
 
 export default BarChartVersus;
-
-const styles = StyleSheet.create({
-    container: {
-        width: "100%",
-        flexDirection: 'column',
-        gap: spacingY._5
-    },
-    labelContainer: {
-        position: 'relative',
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    barLabel:{
-        flexDirection:'row', 
-        gap: spacingX._3,
-        alignItems:'center',
-        justifyContent: 'space-between',
-    },
-    label: {
-        fontWeight: "bold",
-        color: colors.neutral200
-    },
-    barContainer: {
-        flexDirection: "row",
-        height: verticalScale(25),
-        backgroundColor: colors.neutral200,
-        borderRadius: radius._10,
-        overflow: "hidden",
-        justifyContent: 'space-between'
-    },
-    expenseBar: {
-        height: "100%",
-        backgroundColor: colors.rose,
-        paddingVertical: 5, 
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-    },
-    incomeBar: {
-        height: "100%",
-        backgroundColor: colors.primary,
-        justifyContent: 'center',
-        paddingVertical: 5, 
-        alignItems: 'flex-end'
-    },
-});

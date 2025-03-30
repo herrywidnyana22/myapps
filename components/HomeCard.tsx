@@ -1,18 +1,22 @@
 import { useAuth } from '@/contexts/authContext'
 import { WalletType } from '@/types'
 import { orderBy, where } from 'firebase/firestore'
-import { colors, spacingX, spacingY } from '@/styles/themes'
 import { ArrowDown, ArrowUp, Ellipsis } from 'lucide-react-native'
-import { horizontalScale, verticalScale } from '@/utils/style'
-import { ImageBackground, StyleSheet, View } from 'react-native'
+import { verticalScale } from '@/utils/style'
+import { ImageBackground, View } from 'react-native'
 
 import CustomText from './CustomText'
 import useData from '@/hooks/useData'
-import { toIdr, toLabelIdr } from '@/utils/idrFormater'
+import { toLabelIdr } from '@/utils/idrFormater'
+import { useTheme } from '@/contexts/themeContext'
+import { homeCardStyle } from '@/styles/styles'
 
 const HomeCard = () => {
 
     const {user} = useAuth()
+
+    const { colors } = useTheme()
+    const styles = homeCardStyle(colors)
     
     const {data: walletData, isLoading: walletLoading, error: walletError} = useData<WalletType>(
         "wallets",
@@ -131,38 +135,3 @@ const HomeCard = () => {
 }
 
 export default HomeCard
-
-const styles = StyleSheet.create({
-    container:{
-        height: '87%',
-        width: '100%',
-        padding: spacingX._20,
-        paddingHorizontal: horizontalScale(23),
-        justifyContent: 'space-between'
-    },
-    totalBalance:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: spacingY._5
-    },
-    stats:{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
-    },
-    statIcon:{
-        backgroundColor: colors.neutral300,
-        padding: spacingY._5,
-        borderRadius: 50 
-    },
-    incomeExpense:{
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: spacingY._7
-    },
-    bgImage:{
-        height: horizontalScale(210),
-        width: '100%'
-    },
-})

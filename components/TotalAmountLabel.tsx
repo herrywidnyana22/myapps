@@ -1,31 +1,45 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { useTheme } from '@/contexts/themeContext'
 import { Banknote } from 'lucide-react-native'
-import CustomText from './CustomText'
-import { colors, radius, spacingX } from '@/styles/themes'
 import { toLabelIdr } from '@/utils/idrFormater'
+import { StyleSheet, View } from 'react-native'
+import { colors, radius, spacingX } from '@/styles/themes'
+
+import CustomText from './CustomText'
 
 type TotalAmountLabelType={
     totalAmount: number
 }
 
 const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
+
+    const styles = StyleSheet.create({
+        totalAmountLabel:{
+            flexDirection: 'row-reverse',
+            gap: spacingX._3,
+            alignItems: 'center',
+            paddingHorizontal: spacingX._10,
+            paddingVertical: spacingX._3,
+            borderRadius: radius._10,
+        },
+    })
+
     const isTotalAmountNegative = (Number(totalAmount) || 0) < 0 
     return (
         <View style={[styles.totalAmountLabel, {
                 backgroundColor: isTotalAmountNegative
-                    ? colors.rose 
-                    : totalAmount === 0 ? colors.neutralDark : colors.green
+                    ? colors.neutral.rose 
+                    : totalAmount === 0 ? colors.neutral.neutralDark : colors.neutral.green
                 }
             ]}
         >      
             <Banknote
-                color={colors.white}
+                color={colors.neutral.white}
                 size={16}
             />   
             <CustomText
                 size={14}
                 fontWeight={'600'}
+                color={colors.neutral.neutral200}
             >
                 {totalAmount > 0 && "+"}
                 {toLabelIdr(totalAmount)}
@@ -35,14 +49,3 @@ const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
 }
 
 export default TotalAmountLabel
-
-const styles = StyleSheet.create({
-    totalAmountLabel:{
-        flexDirection: 'row-reverse',
-        gap: spacingX._3,
-        alignItems: 'center',
-        paddingHorizontal: spacingX._10,
-        paddingVertical: spacingX._3,
-        borderRadius: radius._10,
-    },
-})

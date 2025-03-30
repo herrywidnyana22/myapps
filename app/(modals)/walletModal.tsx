@@ -1,12 +1,11 @@
 import { Trash2 } from 'lucide-react-native'
 import { useAuth } from '@/contexts/authContext'
+import { spacingY } from '@/styles/themes'
 import { WalletType } from '@/types'
 import { useEffect, useState } from 'react'
-import { colors, spacingX, spacingY } from '@/styles/themes'
-import { horizontalScale, verticalScale } from '@/utils/style'
+import { Alert, ScrollView, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { createUpdateWallet, deleteWallet } from '@/services/walletService'
-import { Alert, ScrollView, StyleSheet, View } from 'react-native'
 
 import Input from '@/components/Input'
 import Header from '@/components/Header'
@@ -15,6 +14,8 @@ import BackButton from '@/components/BackButton'
 import CustomText from '@/components/CustomText'
 import ImageUpload from '@/components/ImageUpload'
 import ModalWrapper from '@/components/ModalWrapper'
+import { useTheme } from '@/contexts/themeContext'
+import { walletModalStyle } from '@/styles/modals/modalStyles'
 
 const WalletModal = () => {
     const [isLoading, setIsLoading] = useState(false)
@@ -23,9 +24,12 @@ const WalletModal = () => {
         image: null
     })
 
-    const { user, updateUserData } = useAuth()
+    const { user } = useAuth()
     const router = useRouter()
-    const params = useLocalSearchParams();
+    const params = useLocalSearchParams()
+
+    const { colors } = useTheme()
+    const styles = walletModalStyle(colors)
 
     const selectedWallet = {
         id: params.id as string,
@@ -163,58 +167,3 @@ const WalletModal = () => {
 }
 
 export default WalletModal
-
-const styles = StyleSheet.create({
-    container:{
-        flex: 1,
-        justifyContent: 'space-between',
-        paddingHorizontal: spacingY._20,
-    },
-    footer:{
-        flexDirection: 'row',
-        gap: horizontalScale(12),
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: spacingX._20,
-        paddingTop: spacingY._15,
-        borderTopColor: colors.neutral700,
-        marginBottom: spacingY._5,
-        borderTopWidth: 1
-    },
-    form:{
-        marginTop: spacingY._15,
-        gap: spacingY._30
-    },
-    avatarContainer:{
-        position: 'relative',
-        alignSelf: 'center'
-    },
-    avatar:{
-        width: verticalScale(130),
-        height: verticalScale(130),
-        alignSelf: 'center',
-        borderRadius: 200,
-        borderWidth: 1,
-        borderColor: colors.neutral500
-    },
-    editIcon:{
-        position: 'absolute',
-        bottom: spacingY._5,
-        right: spacingY._7,
-        padding: spacingY._7,
-        borderRadius: 100,
-        backgroundColor: colors.neutral100,
-        shadowColor: colors.black,
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.2,
-        shadowRadius: 10,
-        elevation: 4,
-    },
-    inputContainer:{
-        gap: spacingY._10
-    },
-    deleteButton:{
-        backgroundColor: colors.rose,
-        paddingHorizontal: spacingX._15,
-    }
-})

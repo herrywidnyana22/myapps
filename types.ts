@@ -14,6 +14,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
+import { SharedValue } from "react-native-reanimated";
 
 export type ScreenWrapperProps = {
   style?: ViewStyle;
@@ -185,4 +186,20 @@ export type DeleteAlertType = {
   onConfirm: () => void, 
   title: string, 
   desc: string
+}
+
+export type CardType = {
+  prevId?: string | null,
+  nextId?: string | null,
+  title: string,
+  totalBalance: number | string | undefined,
+  totalIncome: number | string | undefined,
+  totalExpense: number | string | undefined,
+  isLoading?: boolean
+  index: number,
+  currentIndex: SharedValue<number>,
+  prevIndex: SharedValue<number>
+  animateValue: SharedValue<number>
+  dataLength: number,
+  setCardActiveID: React.Dispatch<React.SetStateAction<string>>,
 }

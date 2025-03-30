@@ -1,13 +1,16 @@
-import { View, TouchableOpacity, StyleSheet } from 'react-native'
-import { ImageUploadProps } from '@/types'
-import { Upload, X } from 'lucide-react-native'
-import { colors, radius } from '@/styles/themes'
-import CustomText from './CustomText'
-import { horizontalScale, verticalScale } from '@/utils/style'
-import { Image } from 'expo-image'
-import { getFilePath } from '@/services/imageService'
 import * as ImagePicker from 'expo-image-picker'
-import { useState } from 'react'
+
+import { Image } from 'expo-image'
+import { radius } from '@/styles/themes'
+import { useTheme } from '@/contexts/themeContext'
+import { Upload, X } from 'lucide-react-native'
+import { getFilePath } from '@/services/imageService'
+import { ImageUploadProps } from '@/types'
+import { imageUpdaloadStyle } from '@/styles/styles'
+import { View, TouchableOpacity } from 'react-native'
+import { horizontalScale, verticalScale } from '@/utils/style'
+
+import CustomText from './CustomText'
 
 const ImageUpload = ({
     file = null,
@@ -24,6 +27,8 @@ const ImageUpload = ({
     const maxWidth = horizontalScale(150)
     const maxHeight = verticalScale(150)
 
+    const { colors } = useTheme()
+    const styles = imageUpdaloadStyle(colors)
 
     const onSelectImage = async() =>{
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -50,7 +55,12 @@ const ImageUpload = ({
                     <Upload color={colors.neutral200}/>
                     {
                         placeholder && 
-                        <CustomText size={15}>{ placeholder }</CustomText>
+                        <CustomText 
+                            size={15}
+                            color={colors.neutral200}
+                        >
+                            { placeholder }
+                        </CustomText>
                     }
                 </TouchableOpacity>
             )
@@ -65,7 +75,9 @@ const ImageUpload = ({
                         style={{
                             flex: 1,
                             width: maxWidth,
-                            height: selectedAspectRatio == (3/4) ? maxHeight : (maxHeight / selectedAspectRatio),
+                            height: selectedAspectRatio == (3/4) 
+                                ? maxHeight 
+                                : (maxHeight / selectedAspectRatio),
                             borderRadius: radius._15
                         }}
                     />
@@ -87,37 +99,4 @@ const ImageUpload = ({
 }
 
 export default ImageUpload
-
-const styles = StyleSheet.create({
-    inputContainer:{
-        height: verticalScale(52),
-        backgroundColor: colors.neutral700,
-        borderRadius: radius._15,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        gap: 10,
-        borderWidth: 1,
-        borderColor: colors.neutral500,
-        borderStyle: 'dashed'
-    },
-    image:{
-        position: 'relative',
-        borderRadius: radius._15,
-        borderCurve: 'continuous',
-        overflow: 'hidden',
-    },
-    deleteIcon:{
-        position: 'absolute',
-        top: horizontalScale(6),
-        left: horizontalScale(115),
-        shadowColor: colors.black,
-        shadowOffset: {width: 0, height: 5},
-        shadowOpacity: 1,
-        shadowRadius: 10,
-        borderRadius: '50%',
-        backgroundColor: colors.neutral100,
-        padding: 4
-    }
-})
 

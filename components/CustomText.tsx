@@ -1,20 +1,20 @@
+import { useTheme } from '@/contexts/themeContext'
 import { Text, TextStyle } from 'react-native'
 import { CustomTextProps } from '@/types'
-import { colors } from '@/styles/themes'
-import { verticalScale } from '@/utils/style'
 
 const CustomText = ({
     children,
     size,
-    color= colors.text,
+    color,
     fontWeight= "400",
     style,
     textProps ={}
 }: CustomTextProps) => {
-
+    const { colors } = useTheme()
+    
     const textStyle: TextStyle ={
         fontSize: size ? size : 18,
-        color,
+        color: color ?? colors.text,
         fontWeight
     }
 

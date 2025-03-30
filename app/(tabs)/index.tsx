@@ -1,14 +1,16 @@
 
 
 import { useAuth } from '@/contexts/authContext'
+import { spacingY } from '@/styles/themes'
+import { useTheme } from '@/contexts/themeContext';
 import { useRouter } from 'expo-router'
+import { homeStyles } from '@/styles/tabs/tabStyles';
 import { Plus, Search } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
 import { startOfDay, endOfDay } from "date-fns";
-import { limit, orderBy, where } from 'firebase/firestore'
+import { limit, orderBy, QueryConstraint, where } from 'firebase/firestore'
 import { getTotalExpenseIncome } from '@/utils/getAmount'
-import { colors, spacingX, spacingY } from '@/styles/themes'
-import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 
 import Button from '@/components/Button'
 import HomeCard from '@/components/HomeCard'
@@ -17,26 +19,87 @@ import ScreenWrapper from '@/components/ScreenWrapper'
 import BarChartVersus from '@/components/BarChartVersus'
 import TransactionList from '@/components/TransactionList'
 import useTransactionsWithWallets from '@/hooks/useTransactionsWithWallet'
+import Card from '@/components/Card';
+import useData from '@/hooks/useData';
+import { WalletType } from '@/types';
+import { toLabelIdr } from '@/utils/idrFormater';
+import { useSharedValue } from 'react-native-reanimated';
+import { useEffect, useMemo, useState } from 'react';
 
 const Home = () => {
+
+  const [cardActiveID, setCardActiveID] = useState<'totalBalance' | 'todayBalance' |  string>('totalBalance')
 
   const {user} = useAuth()
   const router = useRouter()
 
-  const today = new Date();
+  const { colors } = useTheme()
+  const styles = homeStyles(colors)
+
+  // for card stack style
+  const animatedValue = useSharedValue(0)
+  const currentIndex = useSharedValue(0)
+  const prevIndex = useSharedValue(0)
+
+  const today = new Date()
   const startOfDayTimestamp = startOfDay(today).getTime()
   const endOfDayTimestamp = endOfDay(today).getTime()
 
-  const { data: recentTransactions, isLoading: transactionLoading, error } = 
+  const { data: walletData, isLoading: walletLoading } = useData<WalletType>(
+    "wallets",
+    [where("uid", "==", user?.uid), orderBy("created", "desc")]
+  )
+
+  const { data: transactions, isLoading: transactionLoading, error } = 
     useTransactionsWithWallets("transactions", [
       where("uid", "==", user?.uid),
-      where("date", ">=", new Date(startOfDayTimestamp)),
-      where("date", "<", new Date(endOfDayTimestamp)),
       orderBy("date", "desc"),
-      limit(30),
     ])
+  
+  const filteredTransactions = useMemo(() => {
+    if (!transactions) return [];
 
-  const {totalExpense, totalIncome} = getTotalExpenseIncome(recentTransactions)
+    switch (cardActiveID) {
+      case "totalBalance":
+        return transactions;
+
+      case "todayBalance":
+        return transactions.filter(
+          (transaction) =>
+            transaction.date >= new Date(startOfDayTimestamp) &&
+            transaction.date < new Date(endOfDayTimestamp)
+        );
+
+      default:
+        return transactions.filter(
+          (transaction) => transaction.walletId === cardActiveID
+        )
+    }
+  }, [cardActiveID, transactions, startOfDayTimestamp, endOfDayTimestamp]);
+
+  const { totalExpense, totalIncome } = getTotalExpenseIncome(filteredTransactions)
+
+  const updatedWalletData = walletData 
+    ? [ 
+        {
+          id: 'totalBalance',
+          name: "TOTAL WALLET",
+          totalIncome: walletData.reduce((sum, item) => sum + Number(item.totalIncome), 0),
+          totalExpenses: walletData.reduce((sum, item) => sum + Number(item.totalExpenses), 0),
+          amount: walletData.reduce((sum, item) => sum + Number(item.amount), 0),
+          image: null,
+        }, {
+          id: 'todayBalance',
+          name: "TODAY BALANCE",
+          totalIncome,
+          totalExpenses: totalExpense,
+          amount: totalIncome - totalExpense,
+          image: null,
+        },
+        ...walletData,
+      ] 
+    : []
+
 
   return (
     <ScreenWrapper>
@@ -45,13 +108,14 @@ const Home = () => {
           <View style={{ gap: 4 }}>
             <CustomText
               size={16}
-              color={colors.neutral400}
+              color={colors.neutral200}
             >
               Hello
             </CustomText>
             <CustomText
               size={20}
               fontWeight={'500'}
+              color={colors.neutral200}
             >
               {user?.name}
             </CustomText>
@@ -66,17 +130,35 @@ const Home = () => {
           </TouchableOpacity>
         </View>
 
-        <View style={{ gap: spacingY._25 }}>
-          <View>
-            <HomeCard/>
-          </View>
+        <View style={{ gap: spacingY._25, position: 'relative', }}>
+          <SafeAreaView style={styles.areaViewContainer}>
+            {
+              updatedWalletData.map((wallet, index) => (
+                <Card
+                  key={index}
+                  nextId={index < updatedWalletData.length - 1 ? updatedWalletData[index + 1]?.id : null}
+                  prevId={index > 0 ? updatedWalletData[index - 1]?.id : null}
+                  index={index}
+                  currentIndex={currentIndex}
+                  prevIndex={prevIndex}
+                  animateValue={animatedValue}
+                  dataLength={updatedWalletData.length}
+                  title={wallet.name}
+                  totalBalance={toLabelIdr(wallet.amount ?? 0)} // Ensure this is formatted properly
+                  totalIncome={toLabelIdr(wallet.totalIncome ?? 0)}
+                  totalExpense={toLabelIdr(wallet.totalExpenses ?? 0)}
+                  setCardActiveID = {setCardActiveID}
+                  isLoading={walletLoading}
+                />
+            ))}
+          </SafeAreaView>
           <BarChartVersus
             expense={totalExpense}
             income={totalIncome}
           />
           <TransactionList
             title='Today Transaction'
-            data={recentTransactions}
+            data={filteredTransactions}
             isLoading={transactionLoading}
             emptyListMessage='No transaction...'
           />
@@ -98,31 +180,3 @@ const Home = () => {
 }
 
 export default Home
-
-const styles = StyleSheet.create({
-  container:{
-    flex: 1,
-    paddingHorizontal: spacingX._20,
-    marginTop: verticalScale(8)
-  },
-  header:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacingY._10
-  },
-  searchIcon:{
-    backgroundColor: colors.neutral700,
-    padding: spacingX._10,
-    borderRadius: 50
-  },
-  floatingButton:{
-    height: verticalScale(50),
-    width: verticalScale(50),
-    position: 'absolute',
-    right: verticalScale(30),
-    bottom: verticalScale(30),
-    borderRadius: 100,
-
-  },
-})

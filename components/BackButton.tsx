@@ -1,17 +1,28 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { BackButtonProps } from '@/types'
+import { radius } from '@/styles/themes'
+import { useTheme } from '@/contexts/themeContext'
 import { useRouter } from 'expo-router'
-
-import { verticalScale } from '@/utils/style'
-import { colors, radius } from '@/styles/themes'
 import { ChevronLeft } from 'lucide-react-native'
+import { verticalScale } from '@/utils/style'
+import { BackButtonProps } from '@/types'
+import { StyleSheet, TouchableOpacity } from 'react-native'
+
 
 const BackButton = ({
     style,
     iconSize=26
 }:BackButtonProps) => {
     const router = useRouter()
+    const { colors } = useTheme()
+    
+    const styles = StyleSheet.create({
+        button:{
+            backgroundColor: colors.neutral600,
+            alignSelf: 'flex-start',
+            borderRadius: radius._12,
+            borderCurve: 'continuous',
+            padding: 5
+        }
+    })
 
     return (
         <TouchableOpacity
@@ -29,13 +40,3 @@ const BackButton = ({
 }
 
 export default BackButton
-
-const styles = StyleSheet.create({
-    button:{
-        backgroundColor: colors.neutral600,
-        alignSelf: 'flex-start',
-        borderRadius: radius._12,
-        borderCurve: 'continuous',
-        padding: 5
-    }
-})
