@@ -36,38 +36,57 @@ const Statistic = () => {
   const [expense, setExpense] = useState(0)
   const [income, setIncome] = useState(0)
 
-  const [selectedWallet, setSelectedWallet] = useState<string | null>(null)
-  const [walletIndex, setWalletIndex] = useState(0)
+  const [selectedWallets, setSelectedWallets] = useState<string[]>([])
+  const [selectedWalletIds, setSelectedWalletIds] = useState<string[]>([])
 
   const { data: walletData, isLoading: walletLoading } = useData<WalletType>(
     "wallets",
     [where("uid", "==", user?.uid), orderBy("created", "desc")]
   )
 
-  // Create a mapping of walletName to walletId
-  const walletMap = useMemo(() => {
-    const map: Record<string, string> = {} // { walletName: walletId }
-    walletData?.forEach(wallet => {
-      if (wallet.id && wallet.name) { 
-        map[wallet.name] = wallet.id // Ensure both id & name exist before assignment
-      }
-    })
-
-    return map
-  }, [walletData])
-
   const segmentWalletValues = useMemo(
     () => ["All", ...(walletData?.map(wallet => wallet.name) || [])],
     [walletData]
   )
 
-  const onWalletSegmentChange = (index: number) => {
-    setWalletIndex(index)
-    const selectedWalletName = segmentWalletValues[index]
+  const walletMap = useMemo(() => {
+    const map: Record<string, string> = {}
 
-    // Get walletId (null if "All" is selected)
-    const selectedWalletId = selectedWalletName === "All" ? null : walletMap[selectedWalletName] || null;
-    setSelectedWallet(selectedWalletId)
+    walletData?.forEach(wallet => {
+      if (wallet.id && wallet.name) { 
+        map[wallet.name] = wallet.id
+      }
+    })
+
+    return map
+
+  }, [walletData])
+
+  const onWalletSegmentChange = (index: number) => {
+    const selectedWalletName = segmentWalletValues[index]
+    const walletId = walletMap[selectedWalletName] || null
+
+    setSelectedWallets((prevWallets) => {
+        if (selectedWalletName === "All") {
+            return []
+        }
+
+        return prevWallets.includes(selectedWalletName)
+            ? prevWallets.filter((name) => name !== selectedWalletName)
+            : [...prevWallets, selectedWalletName]
+    })
+
+    setSelectedWalletIds((prevIds) => {
+        if (selectedWalletName === "All") {
+            return []
+        }
+
+        return walletId
+            ? prevIds.includes(walletId)
+                ? prevIds.filter((id) => id !== walletId)
+                : [...prevIds, walletId]
+            : prevIds
+    })
   }
 
   const getStat = useCallback(async (action: () => Promise<ResponseType>) => {
@@ -87,17 +106,17 @@ const Statistic = () => {
     setIsLoading(false)
   }, [])
 
-    useEffect(() => {
+  useEffect(() => {
     if(activeSegmentIndex === 0){
-      getStat(() => getWeeklyData(user?.uid as string, selectedWallet, colors))
+      getStat(() => getWeeklyData(user?.uid as string, selectedWalletIds, colors))
     }
     if(activeSegmentIndex === 1){
-      getStat(() => getMonthlyData(user?.uid as string, selectedWallet, colors))
+      getStat(() => getMonthlyData(user?.uid as string, selectedWalletIds, colors))
     }
     if(activeSegmentIndex === 2){
-      getStat(() => getYearlyData(user?.uid as string, selectedWallet, colors))
+      getStat(() => getYearlyData(user?.uid as string, selectedWalletIds, colors))
     }
-  }, [activeSegmentIndex, selectedWallet])
+  }, [activeSegmentIndex, selectedWalletIds])
 
   return (
     <ScreenWrapper>
@@ -113,7 +132,7 @@ const Statistic = () => {
             values={['Weekly', 'Monthly', 'Yearly']}
             selectedIndex={activeSegmentIndex}
             tintColor={colors.neutral200}
-            backgroundColor={colors.neutral800}
+            backgroundColor={colors.neutral900}
             appearance='dark'
             activeFontStyle={styles.segmentFontStyle}
             style={styles.segmentStyle}
@@ -123,7 +142,7 @@ const Statistic = () => {
 
           <VerticalSegmentedControl
             values={segmentWalletValues}
-            selectedIndex={walletIndex}
+            selectedValue={selectedWallets}
             onChange={onWalletSegmentChange}
           />
           

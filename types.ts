@@ -206,6 +206,6 @@ export type CardType = {
 
 export type VerticalSegmentedControlProps = {
   values: string[]
-  selectedIndex: number
+  selectedValue: string[]
   onChange: (index: number) => void
 }

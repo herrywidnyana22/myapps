@@ -195,7 +195,7 @@ export const profileStyle = (colors: any) =>{
 export const transactionStyles = (colors: any) => {
     return StyleSheet.create({
         container:{
-            gap: spacingY._15,
+            gap: 10,
         },
         header:{
             flexDirection:'row',
@@ -206,27 +206,28 @@ export const transactionStyles = (colors: any) => {
             color: colors.white,
         },
         list:{
-            minHeight: verticalScale(320),
-            paddingBottom: Platform.OS == 'ios' ? verticalScale(72) : verticalScale(55),
+            minHeight: verticalScale(330),
+            paddingBottom: Platform.OS == 'ios' ? 72 : 55,
         },
         row:{
+            height: verticalScale(65),
             flexDirection: 'row',
-            gap: spacingX._12,
+            gap: horizontalScale(12),
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: spacingY._12,
-            marginTop: spacingX._3,
+            marginBottom: 12,
+            marginTop: 5,
+            padding: 10,
+            paddingHorizontal: 10,
+            borderRadius: 17,
             backgroundColor: colors.neutral800,
-            padding: spacingY._10,
-            paddingHorizontal: spacingY._10,
-            borderRadius: radius._17,
         },
         icon:{
-            height: verticalScale(44),
+            height: 40,
             aspectRatio: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: radius._12,
+            borderRadius: 12,
             borderCurve: 'continuous'
         },
         categoryDesc:{
@@ -236,20 +237,20 @@ export const transactionStyles = (colors: any) => {
         amountDate:{
             alignItems: 'flex-end',
             gap:3,
-            marginTop: spacingY._12
+            marginTop: 12
         },
         walletLabel:{
             position: 'absolute',
             flexDirection: 'row-reverse',
-            gap: spacingX._3,
+            gap: 3,
             right: 0,
             justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: spacingY._7,
-            paddingRight: spacingY._10,
+            paddingHorizontal: 7,
+            paddingRight: 10,
             paddingVertical: 2,
             backgroundColor: colors.neutralDark,
-            borderRadius: radius._17,
+            borderRadius: 17,
             borderBottomRightRadius: 0,
             zIndex: 999,
         },
@@ -260,17 +261,17 @@ export const transactionItemStyles = (colors: any) =>{
     return StyleSheet.create({
         actionContainer: {
             flex: 1,
-            height: verticalScale(62),
+            height: verticalScale(69),
             justifyContent: 'center',
-            marginTop: spacingY._5,
         },
         actionButton: {
             flex: 1,
-            gap: spacingX._5,
+            gap: 5,
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: radius._17,
-            paddingHorizontal: spacingX._12,
+            borderRadius: 17,
+            paddingHorizontal: 12,
+            marginTop: 6,
         },
         deleteAction: {
             justifyContent: 'flex-end',
@@ -287,8 +288,8 @@ export const transactionItemStyles = (colors: any) =>{
         },
 
         actionIcon:{
-            paddingRight: spacingX._5,
-            marginLeft: spacingX._5,
+            paddingRight: 5,
+            marginLeft: 5,
         }
     });
 }

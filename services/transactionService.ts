@@ -285,7 +285,7 @@ export const deleteTransaction = async(
 
 export const getWeeklyData = async(
     uid: string,
-    walletId: string | null,
+    walletIds: string[],
     colors: any,
 ): Promise<ResponseType> =>{
     try {
@@ -293,7 +293,7 @@ export const getWeeklyData = async(
         const aWeekAgo = new Date(today);
         aWeekAgo.setDate(today.getDate() - 7);
 
-        // Query transactions from Firestore
+        
         let transactionsQuery = query(
             collection(db, "transactions"),
             where("uid", "==", uid),
@@ -302,13 +302,12 @@ export const getWeeklyData = async(
             orderBy("date", "desc")
         )
 
-        if (walletId) {
+        if (walletIds.length > 0) {
             transactionsQuery = query(
                 transactionsQuery,
-                where("walletId", "==", walletId)
+                where("walletId", "in", walletIds)  // "in" for multiple walletIds
             )
         }
-
 
         const transactionDocs = await getDocs(transactionsQuery)
         const weeklyRange = getLast7Days()
@@ -341,7 +340,7 @@ export const getWeeklyData = async(
             } else {
                 dayData.expense += transaction.amount
             }
-        });
+        })
 
         // create bar chart params (income 5 n expense 2)
         const statData = weeklyRange.flatMap((day) =>[
@@ -377,6 +376,7 @@ export const getWeeklyData = async(
             }
         }
     } catch (error:any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -387,7 +387,7 @@ export const getWeeklyData = async(
 
 export const getMonthlyData = async(
     uid: string,
-    walletId: string | null,
+    walletIds: string[],
     colors: any
 ): Promise<ResponseType> =>{
     try {
@@ -403,10 +403,10 @@ export const getMonthlyData = async(
             orderBy("date", "desc")
         )
 
-        if (walletId) {
+        if (walletIds.length > 0) {
             transactionsQuery = query(
-                transactionsQuery, // Extending the previous query
-                where("walletId", "==", walletId)
+                transactionsQuery,
+                where("walletId", "in", walletIds)  // "in" for multiple walletIds
             )
         }
 
@@ -491,7 +491,7 @@ export const getMonthlyData = async(
 
 export const getYearlyData = async(
     uid: string,
-    walletId: string | null,
+    walletIds: string[],
     colors: any
 ): Promise<ResponseType> =>{
     try {
@@ -502,10 +502,10 @@ export const getYearlyData = async(
             orderBy("date", "desc")
         )
 
-        if (walletId) {
+        if (walletIds.length > 0) {
             transactionsQuery = query(
-                transactionsQuery, // Extending the previous query
-                where("walletId", "==", walletId)
+                transactionsQuery,
+                where("walletId", "in", walletIds)  // "in" for multiple walletIds
             )
         }
 

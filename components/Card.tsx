@@ -10,6 +10,7 @@ import Svg, { Path, Defs, LinearGradient, Stop } from 'react-native-svg';
 import CustomText from './CustomText';
 import Animated, { interpolate, runOnJS, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import { Directions, FlingGestureHandler, State } from 'react-native-gesture-handler';
+import { useState } from 'react';
 
 const Card = ({
     prevId,
@@ -64,7 +65,8 @@ const Card = ({
                 { 
                     translateY: index === prevIndex.value
                         ? yAfterSwipe
-                        : yBeforeSwipe 
+                        : yBeforeSwipe
+                    
                 }, {
                     scale: scale
                 }
@@ -76,6 +78,7 @@ const Card = ({
                     : withTiming(0)
         }
     })
+
 
     return (
         <FlingGestureHandler
@@ -102,7 +105,7 @@ const Card = ({
                         if(currentIndex.value !== dataLength - 1){
                             animateValue.value = withTiming((currentIndex.value += 1))
                             prevIndex.value = currentIndex.value
-
+                            
                             if (nextId) {
                                 runOnJS(setCardActiveID)(nextId);
                             }

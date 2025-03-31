@@ -1,5 +1,4 @@
 import { StyleSheet } from 'react-native'
-import { verticalScale } from '@/utils/style';
 import { radius, spacingX, spacingY } from "@/styles/themes";
 
 export const barChartVersusStyle = (colors: any) =>{
@@ -26,7 +25,7 @@ export const barChartVersusStyle = (colors: any) =>{
         },
         barContainer: {
             flexDirection: "row",
-            height: 20,
+            height: 15,
             backgroundColor: colors.neutral200,
             borderRadius: radius._10,
             overflow: "hidden",
@@ -35,7 +34,7 @@ export const barChartVersusStyle = (colors: any) =>{
         expenseBar: {
             height: "100%",
             backgroundColor: colors.rose,
-            paddingVertical: 2, 
+            paddingVertical: 1, 
             justifyContent: 'center',
             alignItems: 'flex-start',
         },
@@ -43,7 +42,7 @@ export const barChartVersusStyle = (colors: any) =>{
             height: "100%",
             backgroundColor: colors.primary,
             justifyContent: 'center',
-            paddingVertical: 2, 
+            paddingVertical: 1, 
             alignItems: 'flex-end'
         },
     })

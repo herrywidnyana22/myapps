@@ -25,16 +25,21 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
     const styles = transactionItemStyles(colors)
     const transactionStyle = transactionStyles(colors)
 
-    let categoryKey = item?.category && item.category !== "" ? item.category : "uncategory";
+    let categoryKey = item?.category && item.category !== "" 
+        ? item.category 
+        : "uncategory"
+
     let category = item?.type === "income"
         ? incomeCategory[categoryKey]
-        : expenseCategories[categoryKey];
+        : expenseCategories[categoryKey]
 
-    const Icon = category.icon;
-    const date = (item.date as Timestamp)?.toDate()?.toLocaleDateString("en-GB", {
+    const Icon = category.icon
+
+    const date = (item.date as Timestamp)?.toDate()?.toLocaleDateString("id-ID", {
+        weekday: 'short', 
         day: 'numeric',
         month: 'short',
-    })
+    }).replace(/(\w{3}) (\d{1,2}) (\w{3})/, '$1, $2 $3')
 
     const swipeableRef = useRef<SwipeableMethods | null>(null);
    
@@ -146,7 +151,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                             <CustomText
                                 color={item?.type === "expense" ? colors.rose : colors.primary}
                                 fontWeight={'600'}
-                                size={15}
+                                size={16}
                             >
                                 {item?.type === "expense" ? "-" : "+"} { 
                                     item?.amount >= 1000000000 
