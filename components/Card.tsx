@@ -146,10 +146,6 @@ const Card = ({
                                 />
                             </LinearGradient>
                         </Defs>
-                        {/* <Path
-                            d="M 0 80 Q 200 200 400 190 L 400 250 L 0 250 Z"
-                            fill="url(#grad)"
-                        /> */}
                         <Path
                             d={`M 0 ${80 + index * 30} Q 200 ${180 + index * 10} 400 ${190 - index * 40} L 400 250 L 0 250 Z`}
                             fill="url(#grad)"
@@ -202,7 +198,7 @@ const Card = ({
                                             color={colors.neutral300} 
                                             fontWeight={'500'}
                                         >
-                                            Total Income
+                                            Income
                                         </CustomText>
                                         <CustomText 
                                             size={verticalScale(14)} 
@@ -233,7 +229,7 @@ const Card = ({
                                             color={colors.neutral300} 
                                             fontWeight={'500'}
                                         >
-                                            Total Expense
+                                            Expense
                                         </CustomText>
                                         <CustomText 
                                             size={verticalScale(14)} 

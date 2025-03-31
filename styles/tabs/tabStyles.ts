@@ -110,7 +110,7 @@ export const statisticStyle = (colors: any) =>{
         },
         searchIcon:{
             height: verticalScale(35),
-            width: verticalScale(35),
+            width: horizontalScale(35),
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 100,
@@ -118,7 +118,10 @@ export const statisticStyle = (colors: any) =>{
             backgroundColor: colors.neutral700,
         },
         segmentStyle:{
-            height: horizontalScale(37),
+            height: verticalScale(30),
+        },
+        secondarySegmentStyle:{
+            height: verticalScale(30),
         },
         segmentFontStyle:{
             fontSize: verticalScale(13),
@@ -309,4 +312,33 @@ export const tabBarStyle = (colors: any) =>{
             marginBottom: Platform.OS == 'ios' ? spacingY._10 : spacingY._5,
         }
     })
+}
+
+export const filterTabStyle = (colors: any) =>{
+    return StyleSheet.create({
+        container: {
+            flexDirection: "row", 
+            gap: 5,
+            justifyContent: "flex-start",
+            alignItems: "center",
+            overflow: "hidden",
+        },
+        button: {
+            paddingVertical: 5,
+            paddingHorizontal: 8,
+            alignItems: "center",
+            borderRadius: 10,
+            backgroundColor: colors.neutral700,
+        },
+        activeButton: {
+            backgroundColor: colors.neutral400,
+        },
+        text: {
+            color: colors.neutral200,
+        },
+        activeText: {
+            fontWeight: "bold",
+        },
+    })
+
 }

@@ -203,3 +203,9 @@ export type CardType = {
   dataLength: number,
   setCardActiveID: React.Dispatch<React.SetStateAction<string>>,
 }
+
+export type VerticalSegmentedControlProps = {
+  values: string[]
+  selectedIndex: number
+  onChange: (index: number) => void
+}

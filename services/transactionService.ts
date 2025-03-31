@@ -233,9 +233,6 @@ export const deleteTransaction = async(
                 msg: "Transaction not found...!"
             }
         }
-        
-        console.log({transactionId})
-        console.log({walletId})
 
         const selectedTransaction = selectedTransactionID.data() as TransactionType
 
@@ -288,7 +285,8 @@ export const deleteTransaction = async(
 
 export const getWeeklyData = async(
     uid: string,
-    colors: any
+    walletId: string | null,
+    colors: any,
 ): Promise<ResponseType> =>{
     try {
         const today = new Date();
@@ -296,13 +294,21 @@ export const getWeeklyData = async(
         aWeekAgo.setDate(today.getDate() - 7);
 
         // Query transactions from Firestore
-        const transactionsQuery = query(
+        let transactionsQuery = query(
             collection(db, "transactions"),
             where("uid", "==", uid),
             where("date", ">=", Timestamp.fromDate(aWeekAgo)),
             where("date", "<=", Timestamp.fromDate(today)),
             orderBy("date", "desc")
         )
+
+        if (walletId) {
+            transactionsQuery = query(
+                transactionsQuery,
+                where("walletId", "==", walletId)
+            )
+        }
+
 
         const transactionDocs = await getDocs(transactionsQuery)
         const weeklyRange = getLast7Days()
@@ -381,6 +387,7 @@ export const getWeeklyData = async(
 
 export const getMonthlyData = async(
     uid: string,
+    walletId: string | null,
     colors: any
 ): Promise<ResponseType> =>{
     try {
@@ -388,13 +395,20 @@ export const getMonthlyData = async(
         const aYearAgo = new Date(today);
         aYearAgo.setMonth(today.getMonth() - 12);
 
-        const transactionsQuery = query(
+        let transactionsQuery = query(
             collection(db, "transactions"),
             where("uid", "==", uid),
             where("date", ">=", Timestamp.fromDate(aYearAgo)),
             where("date", "<=", Timestamp.fromDate(today)),
             orderBy("date", "desc")
         )
+
+        if (walletId) {
+            transactionsQuery = query(
+                transactionsQuery, // Extending the previous query
+                where("walletId", "==", walletId)
+            )
+        }
 
         const transactionDocs = await getDocs(transactionsQuery)
         const monthlyRange = getLast12Months()
@@ -477,15 +491,23 @@ export const getMonthlyData = async(
 
 export const getYearlyData = async(
     uid: string,
+    walletId: string | null,
     colors: any
 ): Promise<ResponseType> =>{
     try {
 
-        const transactionsQuery = query(
+        let transactionsQuery = query(
             collection(db, "transactions"),
             where("uid", "==", uid),
             orderBy("date", "desc")
         )
+
+        if (walletId) {
+            transactionsQuery = query(
+                transactionsQuery, // Extending the previous query
+                where("walletId", "==", walletId)
+            )
+        }
 
         const transactionDocs = await getDocs(transactionsQuery)
         const transactionData: TransactionWithWalletType[] = []

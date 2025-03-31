@@ -1,4 +1,3 @@
-import { useTheme } from '@/contexts/themeContext'
 import { Banknote } from 'lucide-react-native'
 import { toLabelIdr } from '@/utils/idrFormater'
 import { StyleSheet, View } from 'react-native'
@@ -17,7 +16,7 @@ const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
             flexDirection: 'row-reverse',
             gap: spacingX._3,
             alignItems: 'center',
-            paddingHorizontal: spacingX._10,
+            paddingHorizontal: spacingX._5,
             paddingVertical: spacingX._3,
             borderRadius: radius._10,
         },

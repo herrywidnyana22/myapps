@@ -8,7 +8,7 @@ import { homeStyles } from '@/styles/tabs/tabStyles';
 import { Plus, Search } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
 import { startOfDay, endOfDay } from "date-fns";
-import { limit, orderBy, QueryConstraint, where } from 'firebase/firestore'
+import { limit, orderBy, QueryConstraint, Timestamp, where } from 'firebase/firestore'
 import { getTotalExpenseIncome } from '@/utils/getAmount'
 import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 
@@ -57,25 +57,34 @@ const Home = () => {
     ])
   
   const filteredTransactions = useMemo(() => {
-    if (!transactions) return [];
+    if (!transactions) return []
 
     switch (cardActiveID) {
       case "totalBalance":
         return transactions;
 
-      case "todayBalance":
-        return transactions.filter(
-          (transaction) =>
-            transaction.date >= new Date(startOfDayTimestamp) &&
-            transaction.date < new Date(endOfDayTimestamp)
+     case "todayBalance":
+      return transactions.filter((transaction) => {
+
+        // Ensure Firestore Timestamp is converted to a JavaScript Date object
+        const transactionDate =
+          transaction.date instanceof Date
+            ? transaction.date
+            : (transaction.date as Timestamp).toDate() 
+
+        return (
+          transactionDate.getTime() >= startOfDayTimestamp &&
+          transactionDate.getTime() < endOfDayTimestamp
         );
+      });
 
       default:
         return transactions.filter(
           (transaction) => transaction.walletId === cardActiveID
         )
     }
-  }, [cardActiveID, transactions, startOfDayTimestamp, endOfDayTimestamp]);
+  }, [cardActiveID, transactions, startOfDayTimestamp, endOfDayTimestamp])
+
 
   const { totalExpense, totalIncome } = getTotalExpenseIncome(filteredTransactions)
 
@@ -99,7 +108,7 @@ const Home = () => {
         ...walletData,
       ] 
     : []
-
+    
 
   return (
     <ScreenWrapper>
@@ -157,7 +166,7 @@ const Home = () => {
             income={totalIncome}
           />
           <TransactionList
-            title='Today Transaction'
+            title='Transactions'
             data={filteredTransactions}
             isLoading={transactionLoading}
             emptyListMessage='No transaction...'
