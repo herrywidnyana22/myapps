@@ -59,12 +59,14 @@ const Login = () => {
                     <CustomText
                         size={30}
                         fontWeight={'800'}
+                        color={colors.neutral200}
                     >
                         Hey,
                     </CustomText>
                     <CustomText
                         size={30}
                         fontWeight={'800'}
+                        color={colors.neutral200}
                     >
                         Welcome back
                     </CustomText>
@@ -73,7 +75,7 @@ const Login = () => {
                 <View style={styles.form}>
                     <CustomText
                         size={16}
-                        color={colors.textLighter}
+                        color={colors.neutral400}
                     >
                         Login now to track all your expenses
                     </CustomText>
@@ -122,11 +124,18 @@ const Login = () => {
                 </View>
 
                 <View style={styles.footer}>
-                    <CustomText size={15}>
+                    <CustomText 
+                        size={15}
+                        color={colors.neutral400}
+                    >
                         Don't have an account?
                     </CustomText>
                     <Pressable onPress={() => router.push("/(auth)/register")}>
-                        <CustomText size={15} color={colors.primary} fontWeight={'700'}>
+                        <CustomText 
+                            size={15} 
+                            color={colors.primary} 
+                            fontWeight={'700'}
+                        >
                             Register
                         </CustomText>
                     </Pressable>

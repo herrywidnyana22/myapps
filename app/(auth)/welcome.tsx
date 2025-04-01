@@ -49,12 +49,14 @@ const Welcome = () => {
                         <CustomText
                             size={30}
                             fontWeight={'800'}
+                            color={colors.neutral200}
                         >
                             Always take control
                         </CustomText>
                         <CustomText
                             size={30}
                             fontWeight={'800'}
+                            color={colors.neutral200}
                         >
                             of your finances
                         </CustomText>
@@ -70,13 +72,13 @@ const Welcome = () => {
                     >
                         <CustomText
                             size={17}
-                            color={colors.textLight}
+                            color={colors.neutral400}
                         >
                             Finances mus be arrange to set a better
                         </CustomText>
                         <CustomText
                             size={17}
-                            color={colors.textLight}
+                            color={colors.neutral400}
                         >
                             lifestyle in future
                         </CustomText>

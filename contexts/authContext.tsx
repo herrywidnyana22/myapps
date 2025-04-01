@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
                 msg = "Invalid email...!"
             }
 
+            console.log({error})
             return{
                 success: false,
                 msg
@@ -77,6 +78,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
                 msg = "This email already in use...!"
             }
 
+            console.log({error})
             return{
                 success: false,
                 msg
@@ -102,6 +104,7 @@ export const AuthProvider: React.FC<{children: React.ReactNode}> = ({children}) 
             }
 
         } catch (error: any) {
+            console.log({error})
             let msg = error.message
             // return{
             //     success: false,

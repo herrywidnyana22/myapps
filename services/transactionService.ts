@@ -79,7 +79,7 @@ export const createUpdateTransaction = async(
             }
         }
     } catch (error: any) {
-        console.log("Error disinikah?")
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -132,6 +132,7 @@ const updateWalletIfNewTransaction = async (
             success: true,
         }
     } catch (error: any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -212,6 +213,7 @@ const revertUpdateWallets = async (
             success: true,
         }
     } catch (error: any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -228,6 +230,7 @@ export const deleteTransaction = async(
         const selectedTransactionID = await getDoc(getTransactionID)
 
         if(!selectedTransactionID.exists()){
+            
             return {
                 success: false,
                 msg: "Transaction not found...!"
@@ -275,6 +278,7 @@ export const deleteTransaction = async(
         }
 
     } catch (error: any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -481,6 +485,7 @@ export const getMonthlyData = async(
             }
         }
     } catch (error:any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message
@@ -584,6 +589,7 @@ export const getYearlyData = async(
             }
         }
     } catch (error:any) {
+        console.log({error})
         return {
             success: false,
             msg: error.message

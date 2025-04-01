@@ -30,7 +30,7 @@ export const updateUser = async (
         }
         
     } catch (error: any) {
-
+        console.log({error})
         return{
             success: false,
             msg: error?.message

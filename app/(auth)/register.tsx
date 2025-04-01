@@ -64,12 +64,14 @@ const Register = () => {
                     <CustomText
                         size={30}
                         fontWeight={'800'}
+                        color={colors.neutral200}
                     >
                       Let's,
                     </CustomText>
                     <CustomText
                         size={30}
                         fontWeight={'800'}
+                        color={colors.neutral200}
                     >
                       Get Started
                     </CustomText>
@@ -78,7 +80,7 @@ const Register = () => {
                 <View style={styles.form}>
                     <CustomText
                         size={16}
-                        color={colors.textLighter}
+                        color={colors.neutral400}
                     >
                         Create an account to track all your expenses
                     </CustomText>
@@ -130,11 +132,18 @@ const Register = () => {
                 </View>
 
                 <View style={styles.footer}>
-                    <CustomText size={15}>
+                    <CustomText 
+                        size={15}
+                        color={colors.neutral400}
+                    >
                         Already have an account?
                     </CustomText>
                     <Pressable onPress={() => router.push("/(auth)/login")}>
-                        <CustomText size={15} color={colors.primary} fontWeight={'700'}>
+                        <CustomText 
+                            size={15} 
+                            color={colors.primary} 
+                            fontWeight={'700'}
+                        >
                             Login
                         </CustomText>
                     </Pressable>
