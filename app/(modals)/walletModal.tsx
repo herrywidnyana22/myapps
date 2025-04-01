@@ -1,7 +1,9 @@
 import { Trash2 } from 'lucide-react-native'
 import { useAuth } from '@/contexts/authContext'
+import { useTheme } from '@/contexts/themeContext'
 import { spacingY } from '@/styles/themes'
 import { WalletType } from '@/types'
+import { walletModalStyle } from '@/styles/modals/modalStyles'
 import { useEffect, useState } from 'react'
 import { Alert, ScrollView, View } from 'react-native'
 import { useLocalSearchParams, useRouter } from 'expo-router'
@@ -14,8 +16,6 @@ import BackButton from '@/components/BackButton'
 import CustomText from '@/components/CustomText'
 import ImageUpload from '@/components/ImageUpload'
 import ModalWrapper from '@/components/ModalWrapper'
-import { useTheme } from '@/contexts/themeContext'
-import { walletModalStyle } from '@/styles/modals/modalStyles'
 
 const WalletModal = () => {
     const [isLoading, setIsLoading] = useState(false)

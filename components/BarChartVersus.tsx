@@ -7,8 +7,8 @@ import { barChartVersusStyle } from "@/styles/charts/chartStyles";
 import CustomText from "./CustomText";
 
 type DataBarType = {
-    expense: number;
-    income: number;
+    expense: number
+    income: number
 };
 
 const BarChartVersus = ({ expense, income }: DataBarType) => {

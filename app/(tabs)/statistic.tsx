@@ -21,6 +21,7 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { orderBy, where } from 'firebase/firestore';
 import useData from '@/hooks/useData';
 import VerticalSegmentedControl from '@/components/VerticalSegmentControl';
+import CustomText from '@/components/CustomText';
 
 const Statistic = () => {
 
@@ -62,22 +63,22 @@ const Statistic = () => {
 
   }, [walletData])
 
-  const onWalletSegmentChange = (index: number) => {
-    const selectedWalletName = segmentWalletValues[index]
-    const walletId = walletMap[selectedWalletName] || null
+  const onWalletSegmentChange = (walletName: string) => {
+    
+    const walletId = walletMap[walletName] || null
 
     setSelectedWallets((prevWallets) => {
-        if (selectedWalletName === "All") {
+        if (walletName === "All") {
             return []
         }
 
-        return prevWallets.includes(selectedWalletName)
-            ? prevWallets.filter((name) => name !== selectedWalletName)
-            : [...prevWallets, selectedWalletName]
+        return prevWallets.includes(walletName)
+            ? prevWallets.filter((name) => name !== walletName)
+            : [...prevWallets, walletName]
     })
 
     setSelectedWalletIds((prevIds) => {
-        if (selectedWalletName === "All") {
+        if (walletName === "All") {
             return []
         }
 

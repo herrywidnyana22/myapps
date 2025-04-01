@@ -8,12 +8,11 @@ import { homeStyles } from '@/styles/tabs/tabStyles';
 import { Plus, Search } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
 import { startOfDay, endOfDay } from "date-fns";
-import { limit, orderBy, QueryConstraint, Timestamp, where } from 'firebase/firestore'
 import { getTotalExpenseIncome } from '@/utils/getAmount'
+import { orderBy, Timestamp, where } from 'firebase/firestore'
 import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 
 import Button from '@/components/Button'
-import HomeCard from '@/components/HomeCard'
 import CustomText from '@/components/CustomText'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import BarChartVersus from '@/components/BarChartVersus'
@@ -24,7 +23,7 @@ import useData from '@/hooks/useData';
 import { WalletType } from '@/types';
 import { toLabelIdr } from '@/utils/idrFormater';
 import { useSharedValue } from 'react-native-reanimated';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 const Home = () => {
 
@@ -75,8 +74,8 @@ const Home = () => {
         return (
           transactionDate.getTime() >= startOfDayTimestamp &&
           transactionDate.getTime() < endOfDayTimestamp
-        );
-      });
+        )
+      })
 
       default:
         return transactions.filter(

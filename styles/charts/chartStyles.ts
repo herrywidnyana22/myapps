@@ -25,7 +25,7 @@ export const barChartVersusStyle = (colors: any) =>{
         },
         barContainer: {
             flexDirection: "row",
-            height: 15,
+            height: 18,
             backgroundColor: colors.neutral200,
             borderRadius: radius._10,
             overflow: "hidden",

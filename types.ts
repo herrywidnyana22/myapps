@@ -1,12 +1,9 @@
-import { Href } from "expo-router";
-import { Firestore, Timestamp } from "firebase/firestore";
-import { LucideIcon } from "lucide-react-native";
+
 import { ReactNode } from "react";
+import { Timestamp } from "firebase/firestore";
+import { LucideIcon } from "lucide-react-native";
+import { SharedValue } from "react-native-reanimated";
 import {
-  ActivityIndicator,
-  ActivityIndicatorProps,
-  ImageStyle,
-  PressableProps,
   TextInput,
   TextInputProps,
   TextProps,
@@ -14,7 +11,6 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
-import { SharedValue } from "react-native-reanimated";
 
 export type ScreenWrapperProps = {
   style?: ViewStyle;
@@ -116,8 +112,6 @@ export interface InputProps extends TextInputProps {
   containerStyle?: ViewStyle;
   inputStyle?: TextStyle;
   inputRef?: React.RefObject<TextInput>;
-  //   label?: string;
-  //   error?: string;
 }
 
 export interface CustomButtonProps extends TouchableOpacityProps {
@@ -207,5 +201,5 @@ export type CardType = {
 export type VerticalSegmentedControlProps = {
   values: string[]
   selectedValue: string[]
-  onChange: (index: number) => void
+  onChange: (walletName: string) => void
 }

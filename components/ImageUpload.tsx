@@ -11,6 +11,8 @@ import { View, TouchableOpacity } from 'react-native'
 import { horizontalScale, verticalScale } from '@/utils/style'
 
 import CustomText from './CustomText'
+import { useState } from 'react'
+import Loading from './Loading'
 
 const ImageUpload = ({
     file = null,
@@ -21,7 +23,7 @@ const ImageUpload = ({
     placeholder,
     aspectRatio = [4, 3]
 }: ImageUploadProps) => {
-    
+    const [isLoading, setIsLoading] = useState(false)
     const [ratioWidth, ratioHeight] = aspectRatio
     const selectedAspectRatio = ratioHeight / ratioWidth 
     const maxWidth = horizontalScale(150)
@@ -31,6 +33,7 @@ const ImageUpload = ({
     const styles = imageUpdaloadStyle(colors)
 
     const onSelectImage = async() =>{
+        setIsLoading(true)
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ['images'],
             aspect: aspectRatio,
@@ -42,6 +45,7 @@ const ImageUpload = ({
             onSelect(result.assets[0])
         }
 
+        setIsLoading(false)
     }
 
     return (
@@ -52,16 +56,21 @@ const ImageUpload = ({
                     onPress={onSelectImage}
                     style={[styles.inputContainer, containerStyle && containerStyle]}
                 >
-                    <Upload color={colors.neutral200}/>
-                    {
-                        placeholder && 
-                        <CustomText 
-                            size={15}
-                            color={colors.neutral200}
-                        >
-                            { placeholder }
-                        </CustomText>
-                    }
+                {
+                    isLoading ? (
+                        <Loading size={25} color={colors.primary} />
+                    ) : (
+                        <>
+                            <Upload color={colors.neutral200} />
+                            {placeholder && (
+                                <CustomText size={15} color={colors.neutral200}>
+                                    {placeholder}
+                                </CustomText>
+                            )}
+                        </>
+                    )
+                }
+                    
                 </TouchableOpacity>
             )
         }
