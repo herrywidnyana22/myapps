@@ -84,10 +84,11 @@ const CalendarStat = ({
                         selectedDay={selectedDay}
                         expenseData={expenseData}
                         incomeData={incomeData}
-                        onPress={(day: any) => setSelectedDay(day.dateString)} // ✅ Pass onDayPress manually
+                        onPress={(day: any) => {
+                            setSelectedDay(prevSelectedDay => prevSelectedDay === day.dateString ? '' : day.dateString);
+                        }}
                     />
-                )
-                }
+                )}
             />
         </View>
 

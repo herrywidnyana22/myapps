@@ -186,7 +186,6 @@ export const calendarStyle =(colors: any) =>{
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: '50%',
-            padding: 1,
         },
         dateText: {
             color: colors.neutral200, // Change color as needed
