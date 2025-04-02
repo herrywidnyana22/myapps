@@ -1,7 +1,7 @@
 import * as Haptics from 'expo-haptics';
 
 import { View } from 'react-native';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTheme } from '@/contexts/themeContext';
 import { onAction } from '@/services/globalService';
 import { Timestamp } from 'firebase/firestore';
@@ -14,7 +14,7 @@ import { Trash2, SquarePen, Wallet } from 'lucide-react-native';
 import { expenseCategories, incomeCategory } from '@/constants/data';
 import { RectButton } from 'react-native-gesture-handler';
 
-import Animated, { FadeInDown, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
+import Animated, { FadeInDown, runOnJS, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import CustomText from './CustomText';
 import ReanimatedSwipeable, { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { transactionItemStyles, transactionStyles } from '@/styles/tabs/tabStyles';
@@ -46,13 +46,12 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
     }).replace(/(\w{3}) (\d{1,2}) (\w{3})/, '$1, $2 $3')
 
     const swipeableRef = useRef<SwipeableMethods | null>(null)
-  
 
     const handleSwipeableWillOpen = useCallback((direction: string) => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
         if (direction === 'left') {
             onClick(item)
-            swipeableRef.current?.close()
+            runOnJS(() => swipeableRef.current?.close())()
         }
         if (direction === 'right') {
             deleteAlert({
@@ -60,8 +59,9 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                 desc: "Are you sure to delete this transaction? \nThis action can be undone",
                 onConfirm: () => onAction(() => deleteTransaction(item?.id!, item.walletId)),
             })
-            swipeableRef.current?.close()   
+            runOnJS(() => swipeableRef.current?.close())()
         }
+
     }, [onClick, item])
 
     const renderRightActions = () => {
@@ -96,6 +96,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
             </View>
         )
     }
+
 
     return (
         <Animated.View

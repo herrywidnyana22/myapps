@@ -188,7 +188,7 @@ const Card = ({
                         <View style={styles.stats}>
                             <View style={styles.statContainer}>
                                 <View style={styles.incomeExpense}>
-                                    <View style={styles.statIcon}>
+                                    <View style={[styles.statIcon, {backgroundColor: colors.neutral350}]}>
                                         <ArrowDown
                                             size={verticalScale(15)}
                                             color={colors.green}
@@ -219,7 +219,7 @@ const Card = ({
                             </View>
                             <View>
                                 <View style={styles.incomeExpense}>
-                                    <View style={styles.statIcon}>
+                                    <View style={[styles.statIcon, {backgroundColor: index >= 5 ? colors.neutral700 : colors.neutral350}]}>
                                         <ArrowUp
                                             size={verticalScale(15)}
                                             color={colors.rose}
@@ -229,7 +229,7 @@ const Card = ({
                                     <View>
                                         <CustomText 
                                             size={verticalScale(12)} 
-                                            color={colors.neutral300} 
+                                            color={index >= 5 ? colors.neutral600 : colors.neutral300} 
                                             fontWeight={'500'}
                                         >
                                             Expense

@@ -101,7 +101,6 @@ export const cardStyle = (colors: any) =>{
             gap: verticalScale(5),
         },
         statIcon:{
-            backgroundColor: colors.neutral350,
             padding: spacingY._5,
             borderRadius: 50 
         },
@@ -167,5 +166,49 @@ export const inputStyle = (colors: any) =>{
             color: colors.white,
             fontSize: verticalScale(14),
         }
+    })
+}
+
+export const calendarStyle =(colors: any) =>{
+    return StyleSheet.create({
+        container: {
+            borderRadius: radius._17,
+            backgroundColor: colors.neutral800
+        },
+        dayContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+        },
+        dayItem:{
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: '50%',
+            padding: 1,
+        },
+        dateText: {
+            color: colors.neutral200, // Change color as needed
+        },
+        barContainer: {
+            flexDirection: 'row',
+            height: 6,
+            paddingHorizontal: 5,
+            borderRadius: radius._10,
+            marginTop: 1,
+        },
+        expenseBar: {
+            height: '100%',
+            backgroundColor: colors.rose,
+            borderTopLeftRadius: radius._15,
+            borderBottomLeftRadius: radius._15, 
+        },
+        incomeBar: {
+            height: '100%',
+            backgroundColor: colors.primary,
+            borderTopRightRadius: radius._15,
+            borderBottomRightRadius: radius._15,
+        },
     })
 }

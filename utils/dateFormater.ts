@@ -13,3 +13,13 @@ export function toDate(date?: string | Date | Timestamp) {
         year: "numeric",
     })
 }
+
+export const convertToDateString = (date: string | Date | Timestamp): string => {
+        if (date instanceof Timestamp) {
+            return new Date(date.seconds * 1000).toISOString().split("T")[0]; // Convert Firestore Timestamp
+        }
+        if (date instanceof Date) {
+            return date.toISOString().split("T")[0]
+        }
+        return date
+    } 

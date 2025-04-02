@@ -11,6 +11,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from "react-native";
+import { DateData } from "react-native-calendars";
 
 export type ScreenWrapperProps = {
   style?: ViewStyle;
@@ -202,4 +203,24 @@ export type VerticalSegmentedControlProps = {
   values: string[]
   selectedValue: string[]
   onChange: (walletName: string) => void
+}
+
+export type StatisticType = {
+  viewMode: "Calendar" | "Chart"
+  range: "Weekly" | "Monthly" | "Yearly"
+}
+
+export type CalendarStatType = {
+  selectedDay: string
+  setSelectedDay: React.Dispatch<React.SetStateAction<string>>,
+  data: TransactionWithWalletType[]
+}
+
+export type DayComponentType = {
+    date: DateData;
+    state: "disabled" | "selected" | "";
+    selectedDay: string;
+    expenseData: Record<string, number>;
+    incomeData: Record<string, number>;
+    onPress: (day: any) => void
 }

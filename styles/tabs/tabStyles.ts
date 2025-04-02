@@ -121,7 +121,7 @@ export const statisticStyle = (colors: any) =>{
             height: verticalScale(30),
         },
         secondarySegmentStyle:{
-            height: verticalScale(30),
+            height: verticalScale(25),
         },
         segmentFontStyle:{
             fontSize: verticalScale(13),
