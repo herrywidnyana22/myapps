@@ -112,6 +112,19 @@ export const cardStyle = (colors: any) =>{
     })
 }
 
+export const agendaListtHeaderStyle = (colors: any) =>{
+    return StyleSheet.create({
+        container: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between', 
+            backgroundColor: colors.neutral700,
+            paddingVertical: 8,
+            paddingHorizontal: spacingX._20,
+        }
+    })
+}
+
 export const imageUpdaloadStyle = (colors: any) =>{
     return StyleSheet.create({
         inputContainer:{
@@ -169,45 +182,26 @@ export const inputStyle = (colors: any) =>{
     })
 }
 
-export const calendarStyle =(colors: any) =>{
+export const titleLineStyle = (colors: any) =>{
     return StyleSheet.create({
-        container: {
-            borderRadius: radius._17,
-            backgroundColor: colors.neutral800
+        leftLine: {
+            width: 10, // shorter left line
+            height: 1,
+            backgroundColor: colors.neutral500,
         },
-        dayContainer: {
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: 32,
-            height: 32,
-            borderRadius: '50%',
+        rightLine: {
+            flex: 1, // fill the rest
+            height: 1,
+            backgroundColor: colors.neutral500,
         },
-        dayItem:{
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: '50%',
-        },
-        dateText: {
-            color: colors.neutral200, // Change color as needed
-        },
-        barContainer: {
-            flexDirection: 'row',
-            height: 6,
-            paddingHorizontal: 5,
-            borderRadius: radius._10,
-            marginTop: 1,
-        },
-        expenseBar: {
-            height: '100%',
-            backgroundColor: colors.rose,
-            borderTopLeftRadius: radius._15,
-            borderBottomLeftRadius: radius._15, 
-        },
-        incomeBar: {
-            height: '100%',
-            backgroundColor: colors.primary,
-            borderTopRightRadius: radius._15,
-            borderBottomRightRadius: radius._15,
+        title: {
+            marginHorizontal: spacingX._3,
+            color: colors.neutral200,
+            fontSize: verticalScale(20),
+            fontWeight: '500',
         },
     })
 }
+
+
+

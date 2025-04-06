@@ -21,10 +21,9 @@ import SegmentedControl from '@react-native-segmented-control/segmented-control'
 import { orderBy, where } from 'firebase/firestore';
 import useData from '@/hooks/useData';
 import VerticalSegmentedControl from '@/components/VerticalSegmentControl';
-import CustomText from '@/components/CustomText';
 import CalendarStat from '@/components/CalendarStat';
 import useTransactionsWithWallets from '@/hooks/useTransactionsWithWallet';
-import { convertToDateString } from '@/utils/dateFormater';
+import { convertToDateString, today } from '@/utils/dateFormater';
 
 const Statistic = () => {
 
@@ -46,7 +45,7 @@ const Statistic = () => {
     range: "Weekly",
   })
 
-  const [selectedDay, setSelectedDay] = useState('')
+  const [selectedDay, setSelectedDay] = useState(today)
 
   const viewModeValues: StatisticType["viewMode"][] = ["Calendar", "Chart"]
   const rangeValues: StatisticType["range"][] = ["Weekly", "Monthly", "Yearly"]
@@ -80,7 +79,7 @@ const { data: allTransactions, isLoading: allTransactionLoading, error } =
 
   }, [walletData])
 
-  const onWalletSegmentChange = (walletName: string) => {
+  const onWalletSegmentChange = useCallback((walletName: string) => {
     
     const walletId = walletMap[walletName] || null
 
@@ -105,7 +104,7 @@ const { data: allTransactions, isLoading: allTransactionLoading, error } =
                 : [...prevIds, walletId]
             : prevIds
     })
-  }
+  },[walletMap])
 
   const getStat = useCallback(async (action: () => Promise<ResponseType>) => {
     setIsLoading(true)
@@ -140,13 +139,20 @@ const { data: allTransactions, isLoading: allTransactionLoading, error } =
   }
 
   const transactionsBySelectedDay = useMemo(() => {
-    if (!selectedDay || !allTransactions) return [];
+    if (!selectedDay || !allTransactions) return []
 
     return allTransactions.filter((transaction) => {
-      const dateString = convertToDateString(transaction.date);
-      return dateString === selectedDay && selectedWalletIds.includes(transaction.walletId);
+      const dateString = convertToDateString(transaction.date)
+
+      const isSameDay = dateString === selectedDay
+      const isWalletMatch =
+        !selectedWalletIds || selectedWalletIds.length === 0
+          ? true
+          : selectedWalletIds.includes(transaction.walletId)
+
+      return isSameDay && isWalletMatch
     })
-  }, [selectedDay, allTransactions, selectedWalletIds]);
+  }, [selectedDay, allTransactions, selectedWalletIds])
 
   
 
@@ -155,12 +161,15 @@ useEffect(() => {
     if (statistic.range === "Weekly") {
       getStat(() => getWeeklyData(user?.uid as string, selectedWalletIds, colors));
     }
+
     if (statistic.range === "Monthly") {
       getStat(() => getMonthlyData(user?.uid as string, selectedWalletIds, colors));
     }
+
     if (statistic.range === "Yearly") {
       getStat(() => getYearlyData(user?.uid as string, selectedWalletIds, colors));
     }
+    
   } else if (statistic.viewMode === "Calendar") {
     // If in Calendar mode, filter transactions by selectedDay
     const { totalExpense, totalIncome } = getTotalExpenseIncome(transactionsBySelectedDay);
@@ -177,9 +186,11 @@ useEffect(() => {
           <Header title='Statistic'/>
         </View>
 
-        <View
-          style={styles.scrollContainer}
-        >
+        <View style={[
+          styles.scrollContainer,
+          statistic.viewMode === "Calendar" && { flex: 1 },
+
+        ]}>
           <SegmentedControl
             values={viewModeValues}
             selectedIndex={viewModeValues.indexOf(statistic.viewMode)}
@@ -217,45 +228,59 @@ useEffect(() => {
           {
             statistic.viewMode === "Chart" 
             ? (
-              <View style={styles.chartContainer}>
-                {
-                  chartData.length !== 0 
-                  ? (
-                    <BarChart
-                      data={chartData}
-                      barWidth={horizontalScale(20)}
-                      spacing={[1, 2].includes(rangeValues.indexOf(statistic.range))
-                        ? horizontalScale(25)
-                        : horizontalScale(16)
-                      }
-                      yAxisThickness={0}
-                      xAxisThickness={0}
-                      yAxisLabelWidth={0}
-                      formatYLabel={toLabelNumber}
-                      xAxisLabelTextStyle={{
-                        color: colors.neutral300,
-                        fontSize: verticalScale(12)
-                      }}
-                      noOfSections={4}
-                      minHeight={10}
-                      isAnimated={true}
-                      animationDuration={500}
-                      roundedTop
-                      hideRules
-                    />) 
-                  : (
-                    <View style={styles.noChart}/>
-                  )
-                }{
-                  isLoading && (
-                    <View style={styles.chartLoadingContainer}>
-                      <Loading color={colors.white}/>
-                    </View>
+              <>
+                <View style={styles.chartContainer}>
+                  {
+                    chartData.length !== 0 
+                    ? (
+                      <BarChart
+                        data={chartData}
+                        barWidth={horizontalScale(20)}
+                        spacing={[1, 2].includes(rangeValues.indexOf(statistic.range))
+                          ? horizontalScale(25)
+                          : horizontalScale(16)
+                        }
+                        yAxisThickness={0}
+                        xAxisThickness={0}
+                        yAxisLabelWidth={0}
+                        formatYLabel={toLabelNumber}
+                        xAxisLabelTextStyle={{
+                          color: colors.neutral300,
+                          fontSize: verticalScale(12)
+                        }}
+                        noOfSections={4}
+                        minHeight={10}
+                        isAnimated={true}
+                        animationDuration={500}
+                        roundedTop
+                        hideRules
+                      />) 
+                    : (
+                      <View style={styles.noChart}/>
+                    )
+                  }{
+                    isLoading && (
+                      <View style={styles.chartLoadingContainer}>
+                        <Loading color={colors.white}/>
+                      </View>
 
-                  )
-                }
-              </View>
+                    )
+                  }
+                </View>
 
+                <BarChartVersus
+                  expense={expense}
+                  income={income}
+                />
+
+                <TransactionList
+                  data={transactions}
+                  variant={'default'}
+                  title={'Transactions'}
+                  emptyListMessage='No transactions'
+                  isLoading={isLoading}
+                />
+              </>
             ): (
               <CalendarStat
                 selectedDay={selectedDay}
@@ -264,23 +289,22 @@ useEffect(() => {
               />
             )
           }
-
-          <BarChartVersus
-            expense={expense}
-            income={income}
-          />
-
-          <View style={{marginTop: spacingY._10}}>
-            <TransactionList
-              data={transactions}
-              title={'Transactions'}
-              emptyListMessage='No transactions'
-              isLoading={isLoading}
-            />
-          </View>
+          
         </View>
       </View>
     </ScreenWrapper>
+
+    // <ScreenWrapper>
+    //   <View style={styles.container}>
+    //     <View style={styles.scrollContainer}>
+    //       <CalendarStat
+    //         selectedDay={selectedDay}
+    //         setSelectedDay={setSelectedDay}
+    //         data={allTransactions}
+    //       />
+    //     </View>
+    //   </View>
+    // </ScreenWrapper>
   )
 }
 

@@ -18,10 +18,14 @@ import Animated, { FadeInDown, runOnJS, useAnimatedStyle, useSharedValue, withTi
 import CustomText from './CustomText';
 import ReanimatedSwipeable, { SwipeableMethods } from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { transactionItemStyles, transactionStyles } from '@/styles/tabs/tabStyles';
+import { toLabelDate } from '@/utils/dateFormater';
 
-const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
+const TransactionItem = ({ 
+    item, 
+    index, 
+    onClick 
+}: TransactionItemProps) => {
 
-    // const [isSwipeOpen, setIsSwipeOpen] = useState(false)
     const { colors } = useTheme()
     const styles = transactionItemStyles(colors)
     const transactionStyle = transactionStyles(colors)
@@ -38,12 +42,6 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
 
     const categoryBg = { backgroundColor: category.bgColor }
 
-
-    const date = (item.date as Timestamp)?.toDate()?.toLocaleDateString("id-ID", {
-        weekday: 'short', 
-        day: 'numeric',
-        month: 'short',
-    }).replace(/(\w{3}) (\d{1,2}) (\w{3})/, '$1, $2 $3')
 
     const swipeableRef = useRef<SwipeableMethods | null>(null)
 
@@ -100,6 +98,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
 
     return (
         <Animated.View
+            key={index}
             entering={ FadeInDown
                 .delay(index * 100)
                 .springify()
@@ -165,7 +164,7 @@ const TransactionItem = ({ item, index, onClick }: TransactionItemProps) => {
                             color={colors.neutral300}
                             size={12}
                         >
-                            {date}
+                            {toLabelDate(item.date)}
                         </CustomText>
                     </View>
                 </View>

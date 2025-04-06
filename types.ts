@@ -97,13 +97,14 @@ export type TransactionCategoriesType = {
 
 export type TransactionListType = {
   data: TransactionWithWalletType[];
+  variant?: 'default' | 'secondary'
   title?: string;
   isLoading?: boolean;
   emptyListMessage?: string;
 }
 
 export type TransactionItemProps = {
-  item: TransactionWithWalletType;
+  item: TransactionWithWalletType
   index: number;
   onClick: Function;
 }
@@ -217,10 +218,27 @@ export type CalendarStatType = {
 }
 
 export type DayComponentType = {
-    date: DateData;
-    state: "disabled" | "selected" | "";
-    selectedDay: string;
-    expenseData: Record<string, number>;
-    incomeData: Record<string, number>;
+    date?: DateData
+    state?: 'disabled' | 'selected' | 'inactive' | 'today' | ''
+    selectedDay: string
+    expenseData: Record<string, number>
+    incomeData: Record<string, number>
     onPress: (day: any) => void
+}
+
+export type GroupedTransactionType = {
+  title: string
+  data: TransactionWithWalletType[]
+}
+
+export type TransactionItemSecondaryType ={
+  item: GroupedTransactionType
+  index: number;
+  onClick: Function;
+}
+
+export type AgendaListType = {
+  date: Date | Timestamp | string
+  totalAmount: number
+  transactionsLength: number
 }

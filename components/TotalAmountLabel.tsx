@@ -11,17 +11,6 @@ type TotalAmountLabelType={
 
 const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
 
-    const styles = StyleSheet.create({
-        totalAmountLabel:{
-            flexDirection: 'row-reverse',
-            gap: spacingX._3,
-            alignItems: 'center',
-            paddingHorizontal: spacingX._5,
-            paddingVertical: spacingX._3,
-            borderRadius: radius._10,
-        },
-    })
-
     const isTotalAmountNegative = (Number(totalAmount) || 0) < 0 
     return (
         <View style={[styles.totalAmountLabel, {
@@ -48,3 +37,14 @@ const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
 }
 
 export default TotalAmountLabel
+
+const styles = StyleSheet.create({
+    totalAmountLabel:{
+        flexDirection: 'row-reverse',
+        gap: spacingX._3,
+        alignItems: 'center',
+        paddingHorizontal: spacingX._5,
+        paddingVertical: spacingX._3,
+        borderRadius: radius._10,
+    },
+})

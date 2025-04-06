@@ -13,9 +13,12 @@ import TransactionItem from './TransactionItem'
 import TotalAmountLabel from './TotalAmountLabel';
 import { useTheme } from '@/contexts/themeContext';
 import { transactionStyles } from '@/styles/tabs/tabStyles';
+import TitleWithLine from './TitleWithLine';
+import TransactionItemSecondary from './TransactionItemSecondary';
 
 const TransactionList = ({
     data, 
+    variant='default',
     title,
     isLoading,
     emptyListMessage
@@ -44,36 +47,46 @@ const TransactionList = ({
 
     const {totalExpense, totalIncome} = getTotalExpenseIncome(data)
     const totalAmount = totalIncome - totalExpense
+
+    const renderTransactionItem = ({ item, index }: { item: any, index: number }) => {
+        switch (variant) {
+            case 'secondary':
+                return (
+                    <TransactionItemSecondary
+                        item={item}
+                        index={index}
+                        onClick={onClick}
+                    />
+                )
+            case 'default':
+                default:
+                return (
+                    <TransactionItem
+                        item={item}
+                        index={index}
+                        onClick={onClick}
+                    />
+                )
+        }
+    }
     
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 {
                     title && (
-                    <CustomText
-                        size={verticalScale(20)}
-                        fontWeight={'500'}
-                        style={styles.title}
-                    >
-                        { title }
-                    </CustomText>
+                    <TitleWithLine title={title}/>
                 )}
-                   <TotalAmountLabel totalAmount={totalAmount}/>
-                </View>
-                <View style={data.length !== 0 ? styles.list : {minHeight: verticalScale(5)}}>
-                    <FlashList
-                        data={data}
-                        estimatedItemSize={60}
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({item, index}) => (
-                            <TransactionItem
-                                item={item}
-                                index={index}
-                                onClick={onClick}
-                            />
-                        )}
-                    />
-                </View>
+                <TotalAmountLabel totalAmount={totalAmount}/>
+            </View>
+            <View style={data.length !== 0 ? styles.list : {minHeight: verticalScale(5)}}>
+                <FlashList
+                    data={data}
+                    estimatedItemSize={60}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={renderTransactionItem}
+                />
+            </View>
             {
                 !isLoading && data.length == 0 && (
                     <CustomText

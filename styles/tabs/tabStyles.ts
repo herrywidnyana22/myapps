@@ -80,6 +80,7 @@ export const statisticStyle = (colors: any) =>{
 
     return StyleSheet.create({
         container: {
+            flex: 1,
             gap: spacingY._10,
             paddingHorizontal: spacingX._20,
             paddingVertical: spacingY._5,
@@ -87,7 +88,7 @@ export const statisticStyle = (colors: any) =>{
         scrollContainer:{
             gap: spacingY._10,
             paddingTop: spacingY._5,
-            paddingBottom: verticalScale(100)
+            paddingBottom: verticalScale(0)
         },
         chartContainer:{
             position: 'relative',
@@ -199,11 +200,9 @@ export const transactionStyles = (colors: any) => {
         },
         header:{
             flexDirection:'row',
+            gap: spacingX._7,
             justifyContent: 'space-between',
             alignItems: 'center',
-        },
-        title:{
-            color: colors.white,
         },
         list:{
             minHeight: verticalScale(330),
@@ -257,10 +256,10 @@ export const transactionStyles = (colors: any) => {
     })
 }
 
+
 export const transactionItemStyles = (colors: any) =>{
     return StyleSheet.create({
         actionContainer: {
-            flex: 1,
             height: verticalScale(69),
             justifyContent: 'center',
         },
@@ -291,7 +290,56 @@ export const transactionItemStyles = (colors: any) =>{
             paddingRight: 5,
             marginLeft: 5,
         }
-    });
+    })
+}
+
+export const transactionItemSecondaryStyle =(colors: any) =>{
+    return StyleSheet.create({
+        container:{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            paddingHorizontal: spacingX._15,
+            marginVertical: spacingY._7,
+        },
+        hourLabel:{
+            gap: spacingY._5,
+            alignItems: 'center',
+        },
+        itemContainer:{
+            width: '85%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems:'center',
+            borderRadius: radius._17,
+            borderTopLeftRadius: radius._3,
+            borderBottomLeftRadius: radius._3,
+            paddingHorizontal: spacingX._25,
+            paddingVertical: spacingY._15,
+            backgroundColor: colors.neutral800,
+        },
+        detailContainer:{
+            gap: spacingY._5
+        },
+        walletLabel:{
+            flexDirection: 'row',
+            gap: spacingX._5, 
+            marginTop: spacingY._5,
+        },
+        amount:{
+            gap: spacingY._10,
+            alignItems: 'flex-end',
+        },
+        icon:{
+            height: verticalScale(40),
+            aspectRatio: 1,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: "50%",
+            borderCurve: 'continuous',
+        },
+    })
+        
 }
 
 export const tabBarStyle = (colors: any) =>{

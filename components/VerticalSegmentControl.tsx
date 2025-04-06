@@ -4,6 +4,7 @@ import { useTheme } from "@/contexts/themeContext";
 import { filterTabStyle } from "@/styles/tabs/tabStyles";
 import { VerticalSegmentedControlProps } from "@/types";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { verticalScale } from "@/utils/style";
 
 const VerticalSegmentedControl = ({ 
     values, 
@@ -14,6 +15,7 @@ const VerticalSegmentedControl = ({
     const styles = filterTabStyle(colors)
 
     return (
+    <View style={{ maxHeight: verticalScale(25) }}>
         <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
@@ -61,6 +63,7 @@ const VerticalSegmentedControl = ({
             </View>
 
         </ScrollView>
+    </View>
     )
 }
 

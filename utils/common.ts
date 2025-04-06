@@ -1,3 +1,5 @@
+import { GroupedTransactionType, TransactionWithWalletType } from "@/types";
+import { Timestamp } from "@firebase/firestore";
 import { LocaleConfig } from "react-native-calendars";
 
 export const getLast7Days = () => {
@@ -90,3 +92,33 @@ export const calendarConfig = () => {
     today: "Today"
   })
 }
+
+export const transformTransactions = (transactions: TransactionWithWalletType[]): GroupedTransactionType[] => {
+  const grouped: Record<string, GroupedTransactionType> = {};
+
+  transactions.forEach((transaction, index) => {
+    const dateObj = transaction.date instanceof Date
+      ? transaction.date
+      : transaction.date 
+        ? (transaction.date as Timestamp).toDate() 
+        : new Date()
+
+    const dateStr = dateObj.toISOString().split("T")[0] // Extract YYYY-MM-DD
+    // const hourStr = `${dateObj.getHours()}.${String(dateObj.getMinutes()).padStart(2, "0")}` // Extract hour
+
+    if (!grouped[dateStr]) {
+      grouped[dateStr] = { 
+        title: dateStr, 
+        data: [] 
+      }
+    }
+
+    grouped[dateStr].data.push({
+      ...transaction,
+      date: dateObj
+    })
+  })
+
+  return Object.values(grouped).sort((a, b) => (a.title < b.title ? 1 : -1))
+}
+
