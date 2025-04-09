@@ -77,7 +77,6 @@ export const walletStyle = (colors: any) =>{
 }
 
 export const statisticStyle = (colors: any) =>{
-
     return StyleSheet.create({
         container: {
             flex: 1,
@@ -205,7 +204,7 @@ export const transactionStyles = (colors: any) => {
             alignItems: 'center',
         },
         list:{
-            minHeight: verticalScale(330),
+            height: verticalScale(330),
             paddingBottom: Platform.OS == 'ios' ? 72 : 55,
         },
         row:{
@@ -256,11 +255,11 @@ export const transactionStyles = (colors: any) => {
     })
 }
 
-
 export const transactionItemStyles = (colors: any) =>{
     return StyleSheet.create({
         actionContainer: {
             height: verticalScale(69),
+            width: '100%',
             justifyContent: 'center',
         },
         actionButton: {
@@ -272,11 +271,11 @@ export const transactionItemStyles = (colors: any) =>{
             paddingHorizontal: 12,
             marginTop: 6,
         },
-        deleteAction: {
+        deleteButton: {
             justifyContent: 'flex-end',
             backgroundColor: colors.rose,
         },
-        markAsReadAction: {
+        editButton: {
             alignItems: 'center',
             backgroundColor: colors.green,
         },

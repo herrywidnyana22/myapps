@@ -214,7 +214,8 @@ export type StatisticType = {
 export type CalendarStatType = {
   selectedDay: string
   setSelectedDay: React.Dispatch<React.SetStateAction<string>>,
-  data: TransactionWithWalletType[]
+  data: TransactionWithWalletType[],
+  isWithCalendar?: boolean
 }
 
 export type DayComponentType = {

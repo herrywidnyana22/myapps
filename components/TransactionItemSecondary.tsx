@@ -38,7 +38,6 @@ const TransactionItemSecondary = ({
     return (
         <Animated.View
             testID={testIDs.agenda.ITEM}
-            key={item.id}
             entering={ FadeInDown
                 .delay(index * 100)
                 .springify()

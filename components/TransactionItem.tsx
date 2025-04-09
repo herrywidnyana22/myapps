@@ -49,7 +49,6 @@ const TransactionItem = ({
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
         if (direction === 'left') {
             onClick(item)
-            runOnJS(() => swipeableRef.current?.close())()
         }
         if (direction === 'right') {
             deleteAlert({
@@ -57,16 +56,15 @@ const TransactionItem = ({
                 desc: "Are you sure to delete this transaction? \nThis action can be undone",
                 onConfirm: () => onAction(() => deleteTransaction(item?.id!, item.walletId)),
             })
-            runOnJS(() => swipeableRef.current?.close())()
         }
+        runOnJS(() => swipeableRef.current?.close())()
 
     }, [onClick, item])
 
     const renderRightActions = () => {
         return (
-
             <View style={styles.actionContainer}>
-                <RectButton style={[styles.actionButton, styles.deleteAction]}>
+                <RectButton style={[styles.actionButton, styles.deleteButton]}>
                     <CustomText 
                         size={verticalScale(14)}
                         color={'white'}
@@ -82,7 +80,7 @@ const TransactionItem = ({
     const renderLeftActions = () => {
         return (
             <View style={styles.actionContainer}>
-                <RectButton style={[styles.actionButton, styles.markAsReadAction]}>
+                <RectButton style={[styles.actionButton, styles.editButton]}>
                     <SquarePen size={24} color={'white'} />
                     <CustomText 
                         size={verticalScale(14)}
@@ -98,7 +96,7 @@ const TransactionItem = ({
 
     return (
         <Animated.View
-            key={index}
+            key={item.id}
             entering={ FadeInDown
                 .delay(index * 100)
                 .springify()

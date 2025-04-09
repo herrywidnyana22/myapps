@@ -15,9 +15,9 @@ export const profileModalStyle = (colors: any) =>{
             alignItems: 'center',
             justifyContent: 'center',
             paddingHorizontal: spacingX._20,
-            paddingTop: spacingY._15,
+            marginBottom: spacingY._10,
+            paddingVertical: spacingY._20,
             borderTopColor: colors.neutral700,
-            marginBottom: spacingY._5,
             borderTopWidth: 1
         },
         form:{
@@ -68,9 +68,9 @@ export const transactionModalStyle = (colors: any) =>{
             alignItems: 'center',
             justifyContent: 'center',
             paddingHorizontal: spacingX._20,
-            paddingTop: spacingY._15,
+            marginBottom: spacingY._10,
+            paddingVertical: spacingY._20,
             borderTopColor: colors.neutral700,
-            marginBottom: spacingY._5,
             borderTopWidth: 1
         },
         form:{
@@ -216,9 +216,9 @@ export const walletModalStyle = (colors: any) => {
             alignItems: 'center',
             justifyContent: 'center',
             paddingHorizontal: spacingX._20,
-            paddingTop: spacingY._15,
+            marginBottom: spacingY._10,
+            paddingVertical: spacingY._20,
             borderTopColor: colors.neutral700,
-            marginBottom: spacingY._5,
             borderTopWidth: 1
         },
         form:{
@@ -256,6 +256,35 @@ export const walletModalStyle = (colors: any) => {
         deleteButton:{
             backgroundColor: colors.rose,
             paddingHorizontal: spacingX._15,
+        }
+    })
+}
+
+
+export const searchModalStyle = (colors: any) =>{
+    return StyleSheet.create({
+        container:{
+            flex: 1,
+            justifyContent: 'space-between',
+            paddingHorizontal: spacingX._20,
+        },
+        header:{
+            flexDirection:'row',
+            gap: spacingX._7,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: spacingY._10,
+        },
+        avatarContainer:{
+            position: 'relative',
+            alignSelf: 'center',
+        },
+        inputContainer:{
+            marginBottom: verticalScale(10),
+            paddingVertical: spacingY._20,
+        },
+        input:{
+            backgroundColor: colors.neutral800
         }
     })
 }

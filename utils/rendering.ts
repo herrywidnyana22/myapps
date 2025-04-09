@@ -22,3 +22,4 @@ export function areDayComponentEqual(prev: DayComponentType, next: DayComponentT
     prev.incomeData[prev.date?.dateString ?? ""] === next.incomeData[next.date?.dateString ?? ""]
   )
 }
+

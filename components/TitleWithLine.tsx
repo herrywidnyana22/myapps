@@ -8,10 +8,13 @@ const TitleWithLine = ({ title }: { title?: string }) => {
 
     return (
         <>
-            <View style={title ? styles.leftLine : styles.rightLine} />
+            
             {
                 title && 
-                <Text style={styles.title}>{title}</Text>
+                <>
+                    <View style={styles.leftLine} />
+                    <Text style={styles.title}>{title}</Text>
+                </>
             }
             <View style={styles.rightLine} />
         </>

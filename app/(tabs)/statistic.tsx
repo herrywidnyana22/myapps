@@ -37,6 +37,7 @@ const Statistic = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [expense, setExpense] = useState(0)
   const [income, setIncome] = useState(0)
+  const [selectedDay, setSelectedDay] = useState('')
 
   const [selectedWallets, setSelectedWallets] = useState<string[]>([])
   const [selectedWalletIds, setSelectedWalletIds] = useState<string[]>([])
@@ -45,7 +46,6 @@ const Statistic = () => {
     range: "Weekly",
   })
 
-  const [selectedDay, setSelectedDay] = useState(today)
 
   const viewModeValues: StatisticType["viewMode"][] = ["Calendar", "Chart"]
   const rangeValues: StatisticType["range"][] = ["Weekly", "Monthly", "Yearly"]
@@ -138,23 +138,22 @@ const { data: allTransactions, isLoading: allTransactionLoading, error } =
     }
   }
 
-  const transactionsBySelectedDay = useMemo(() => {
-    if (!selectedDay || !allTransactions) return []
+  const calendarData = useMemo(() => {
+    if (!allTransactions) return []
 
     return allTransactions.filter((transaction) => {
-      const dateString = convertToDateString(transaction.date)
+      // const dateString = convertToDateString(transaction.date)
 
-      const isSameDay = dateString === selectedDay
+      // const isSameDay = dateString === selectedDay
       const isWalletMatch =
         !selectedWalletIds || selectedWalletIds.length === 0
           ? true
           : selectedWalletIds.includes(transaction.walletId)
 
-      return isSameDay && isWalletMatch
+      // return isSameDay && isWalletMatch
+      return isWalletMatch
     })
-  }, [selectedDay, allTransactions, selectedWalletIds])
-
-  
+  }, [allTransactions, selectedWalletIds])
 
 useEffect(() => {
   if (statistic.viewMode === "Chart") {
@@ -170,14 +169,8 @@ useEffect(() => {
       getStat(() => getYearlyData(user?.uid as string, selectedWalletIds, colors));
     }
     
-  } else if (statistic.viewMode === "Calendar") {
-    // If in Calendar mode, filter transactions by selectedDay
-    const { totalExpense, totalIncome } = getTotalExpenseIncome(transactionsBySelectedDay);
-    setTransactions(transactionsBySelectedDay)
-    setExpense(totalExpense)
-    setIncome(totalIncome)
-  }
-}, [statistic, selectedWalletIds, selectedDay])
+  } 
+}, [statistic, selectedWalletIds])
 
   return (
     <ScreenWrapper>
@@ -231,7 +224,7 @@ useEffect(() => {
               <>
                 <View style={styles.chartContainer}>
                   {
-                    chartData.length !== 0 
+                    chartData.length > 0 
                     ? (
                       <BarChart
                         data={chartData}
@@ -268,10 +261,13 @@ useEffect(() => {
                   }
                 </View>
 
-                <BarChartVersus
-                  expense={expense}
-                  income={income}
-                />
+                {
+                  transactions.length > 0 &&
+                  <BarChartVersus
+                    expense={expense}
+                    income={income}
+                  />
+                }
 
                 <TransactionList
                   data={transactions}
@@ -285,7 +281,7 @@ useEffect(() => {
               <CalendarStat
                 selectedDay={selectedDay}
                 setSelectedDay={setSelectedDay}
-                data={allTransactions}
+                data={calendarData}
               />
             )
           }
@@ -294,17 +290,17 @@ useEffect(() => {
       </View>
     </ScreenWrapper>
 
-    // <ScreenWrapper>
-    //   <View style={styles.container}>
-    //     <View style={styles.scrollContainer}>
-    //       <CalendarStat
-    //         selectedDay={selectedDay}
-    //         setSelectedDay={setSelectedDay}
-    //         data={allTransactions}
-    //       />
-    //     </View>
-    //   </View>
-    // </ScreenWrapper>
+  //   <ScreenWrapper>
+  //     <View style={styles.container}>
+  //       <View style={[styles.scrollContainer, { flex: 1 }]}>
+  //         <CalendarStat
+  //           selectedDay={selectedDay}
+  //           setSelectedDay={setSelectedDay}
+  //           data={allTransactions}
+  //         />
+  //       </View>
+  //     </View>
+  //   </ScreenWrapper>
   )
 }
 

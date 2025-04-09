@@ -1,12 +1,12 @@
 import { useTheme } from '@/contexts/themeContext';
-import { CalendarStatType, DayComponentType, GroupedTransactionType, TransactionItemSecondaryType, TransactionWithWalletType } from '@/types';
+import { CalendarStatType, DayComponentType, GroupedTransactionType, TransactionItemSecondaryType, TransactionType, TransactionWithWalletType } from '@/types';
 import { calendarConfig, transformTransactions } from '@/utils/common';
 import { SectionList, SectionListData, View } from 'react-native'
 import { AgendaList, Calendar, CalendarProvider, DateData, ExpandableCalendar } from 'react-native-calendars';
 import { Timestamp } from '@firebase/firestore';
 import { convertToDateString, toLabelDate } from '@/utils/dateFormater';
 import { calendarStyle } from '@/styles/calendar/calendarStyles';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import TransactionList from './TransactionList';
 import TransactionItemSecondary from './TransactionItemSecondary';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,26 +18,31 @@ import { DayProps } from 'react-native-calendars/src/calendar/day';
 import CustomText from './CustomText';
 import { getTotalExpenseIncome } from '@/utils/getAmount';
 import AgendaListHeader from './AgendaListHeader';
+import { useRouter } from 'expo-router';
 
 
 const CalendarStat = ({
+    data,
     selectedDay,
     setSelectedDay,
-    data
+    isWithCalendar = true
 }: CalendarStatType) => {
     calendarConfig()
 
     const [isReady, setIsReady] = useState(false)
     const [isInitialScrollDone, setInitialScrollDone] = useState(false)
 
+    const router = useRouter()
     const { colors } = useTheme()
     const styles = calendarStyle(colors)
     
     const agendaListRef = useRef<SectionList>(null)
 
-    const transactions: GroupedTransactionType[] = data?.length ? transformTransactions(data) : [];
-    const validTransactions = transactions.filter((t) => t?.title && Array.isArray(t.data))
+    const transactions: GroupedTransactionType[] = data?.length 
+        ? transformTransactions(data) 
+        : []
     
+
     const calendarTheme = {
         selectedDayBackgroundColor: colors.primary,
         selectedDayTextColor: colors.white,
@@ -100,11 +105,13 @@ const CalendarStat = ({
 
         if (sectionIndex !== -1 && agendaListRef.current) {
 
-            agendaListRef.current.scrollToLocation({
-                sectionIndex,
-                itemIndex: 0,
-                animated: true,
-            })
+            setTimeout(() => {
+                agendaListRef.current?.scrollToLocation({
+                  sectionIndex,
+                  itemIndex: 0,
+                  animated: true,
+                });
+              }, 100);
         }
     };
 
@@ -120,21 +127,37 @@ const CalendarStat = ({
         )
     }, [selectedDay])
 
-    const renderAgenda = useCallback(({ item, index }: { item: TransactionWithWalletType; index: number }) => (
-        <TransactionItemSecondary
-            item={item}
-            index={index}
-            onClick={(day: any) => {
-                setSelectedDay((prevSelectedDay) =>
-                    prevSelectedDay === day.dateString ? "" : day.dateString
-                )
-            }}
-        />
-    ), [selectedDay])
+    const renderAgenda = useCallback(({ item, index }: { item: TransactionWithWalletType; index: number }) => {
+         
+        const onClick = (item: TransactionType) =>{
+            router.push({
+                pathname: "/(modals)/transactionModal",
+                params:{
+                    id: item?.id,
+                    uid: item?.uid,
+                    walletId: item?.walletId,
+                    type: item?.type,
+                    amount: item?.amount.toString(),
+                    category: item?.category,
+                    date: (item.date as Timestamp)?.toDate()?.toISOString(),
+                    description: item?.description,
+                    image: JSON.stringify(item?.image),
+                }
+            })
+        }           
+        return (
+            <TransactionItemSecondary
+                key={item.id}
+                item={item}
+                index={index}
+                onClick={onClick}
+            />
+        )
+    }, [selectedDay])
 
     const renderSectionHeader = useCallback((title: any) => {
         const date = title as unknown as string
-        const transactionByDate = validTransactions.find((s) => s.title === date)
+        const transactionByDate = transactions.find((s) => s.title === date)
 
         if (!transactionByDate) return null
 
@@ -142,13 +165,14 @@ const CalendarStat = ({
 
         return (
             <AgendaListHeader
+                key={date}
                 date={date}
                 transactionsLength={transactionByDate?.data.length ?? 0}
                 totalAmount={ totalIncome - totalExpense}
 
             />
         )
-    }, [validTransactions])
+    }, [transactions])
 
 
     const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
@@ -168,27 +192,44 @@ const CalendarStat = ({
         setIsReady(true)
     }, [])
 
+    console.log('CalendarStat renders')
+    console.log({selectedDay})
+
     return (
-        isReady && (
-            <CalendarProvider date={validTransactions[1]?.title || new Date().toLocaleDateString('en-CA')}>
-                <ExpandableCalendar
-                    testID={testIDs.expandableCalendar.CONTAINER}
-                    key={colors.neutral800}
-                    theme={calendarTheme}
-                    style={{ marginHorizontal: -spacingX._20 }}
-                    allowShadow={false}
-                    firstDay={1}
-                    // markedDates={{[selectedDay]: { selected: true }}}
-                    dayComponent={renderDay}
-                    animateScroll
-                />
-                <AgendaList
-                    style={{ marginHorizontal: -spacingX._20 }}
-                    sections={validTransactions}
-                    renderItem={renderAgenda}
-                    onViewableItemsChanged={onViewableItemsChanged}
-                    renderSectionHeader={renderSectionHeader}
-                />
+        isReady && ( 
+            <CalendarProvider date={transactions[0]?.title || new Date().toISOString().split('T')[0]}>
+                {isWithCalendar && (
+                    <ExpandableCalendar
+                        testID={testIDs.expandableCalendar.CONTAINER}
+                        key={colors.neutral800}
+                        theme={calendarTheme}
+                        style={{ marginHorizontal: -spacingX._20 }}
+                        allowShadow={false}
+                        firstDay={1}
+                        dayComponent={renderDay}
+                        animateScroll
+                    />
+                )}
+
+                {transactions?.length > 0 ? (
+                    <AgendaList
+                        ref={agendaListRef}
+                        style={{ marginHorizontal: -spacingX._20 }}
+                        sections={transactions}
+                        renderItem={renderAgenda}
+                        onViewableItemsChanged={onViewableItemsChanged}
+                        viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}
+                        renderSectionHeader={renderSectionHeader}
+                    />
+                ) : (
+                    <CustomText
+                        size={16}
+                        style={{ textAlign: 'center', marginTop: spacingY._20 }}
+                        color={colors.neutral400}
+                    >
+                        No transactions found
+                    </CustomText>
+                )}
             </CalendarProvider>
         )
             
@@ -196,4 +237,4 @@ const CalendarStat = ({
     )
 }
 
-export default CalendarStat
+export default memo(CalendarStat)

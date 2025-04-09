@@ -1,29 +1,27 @@
-
-
 import { useAuth } from '@/contexts/authContext'
 import { spacingY } from '@/styles/themes'
 import { useTheme } from '@/contexts/themeContext';
 import { useRouter } from 'expo-router'
+import { toLabelIdr } from '@/utils/idrFormater';
 import { homeStyles } from '@/styles/tabs/tabStyles';
+import { WalletType } from '@/types';
 import { Plus, Search } from 'lucide-react-native'
 import { verticalScale } from '@/utils/style'
+import { useSharedValue } from 'react-native-reanimated';
+import { useMemo, useState } from 'react';
 import { startOfDay, endOfDay } from "date-fns";
 import { getTotalExpenseIncome } from '@/utils/getAmount'
 import { orderBy, Timestamp, where } from 'firebase/firestore'
 import { SafeAreaView, TouchableOpacity, View } from 'react-native'
 
+import Card from '@/components/Card';
 import Button from '@/components/Button'
+import useData from '@/hooks/useData';
 import CustomText from '@/components/CustomText'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import BarChartVersus from '@/components/BarChartVersus'
 import TransactionList from '@/components/TransactionList'
 import useTransactionsWithWallets from '@/hooks/useTransactionsWithWallet'
-import Card from '@/components/Card';
-import useData from '@/hooks/useData';
-import { WalletType } from '@/types';
-import { toLabelIdr } from '@/utils/idrFormater';
-import { useSharedValue } from 'react-native-reanimated';
-import { useMemo, useState } from 'react';
 
 const Home = () => {
 
@@ -46,7 +44,10 @@ const Home = () => {
 
   const { data: walletData, isLoading: walletLoading } = useData<WalletType>(
     "wallets",
-    [where("uid", "==", user?.uid), orderBy("created", "desc")]
+    [
+      where("uid", "==", user?.uid), 
+      orderBy("created", "desc")
+    ]
   )
 
   const { data: transactions, isLoading: transactionLoading, error } = 
@@ -129,11 +130,14 @@ const Home = () => {
             </CustomText>
           </View>
 
-          <TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => router.push('/(modals)/searchModal')}
+            style={styles.searchIcon}
+          >
             <Search
-              size={verticalScale(23)}
+              size={verticalScale(20)}
               color={colors.neutral200}
-              strokeWidth={3}
+              strokeWidth={2}
             />
           </TouchableOpacity>
         </View>

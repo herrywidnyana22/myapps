@@ -73,10 +73,7 @@ const TransactionList = ({
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                {
-                    title && (
-                    <TitleWithLine title={title}/>
-                )}
+                <TitleWithLine title={title}/>
                 <TotalAmountLabel totalAmount={totalAmount}/>
             </View>
             <View style={data.length !== 0 ? styles.list : {minHeight: verticalScale(5)}}>
@@ -88,7 +85,7 @@ const TransactionList = ({
                 />
             </View>
             {
-                !isLoading && data.length == 0 && (
+                !isLoading && data.length === 0 && (
                     <CustomText
                         size={verticalScale(15)}
                         color={colors.neutral400}
