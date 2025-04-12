@@ -38,9 +38,13 @@ const CalendarStat = ({
     
     const agendaListRef = useRef<SectionList>(null)
 
-    const transactions: GroupedTransactionType[] = data?.length 
-        ? transformTransactions(data) 
-        : []
+    const transactions: GroupedTransactionType[] = useMemo(() => (
+        data?.length ? transformTransactions(data) : []
+    ), [data] )
+
+  const validTransactions = useMemo(() => 
+        transactions.filter((t) => t?.title && Array.isArray(t.data)),[transactions]
+  )
     
 
     const calendarTheme = {
@@ -157,7 +161,7 @@ const CalendarStat = ({
 
     const renderSectionHeader = useCallback((title: any) => {
         const date = title as unknown as string
-        const transactionByDate = transactions.find((s) => s.title === date)
+        const transactionByDate = validTransactions.find((s) => s.title === date)
 
         if (!transactionByDate) return null
 
@@ -172,7 +176,7 @@ const CalendarStat = ({
 
             />
         )
-    }, [transactions])
+    }, [validTransactions])
 
 
     const onViewableItemsChanged = useRef(({ viewableItems }: any) => {
@@ -197,7 +201,7 @@ const CalendarStat = ({
 
     return (
         isReady && ( 
-            <CalendarProvider date={transactions[0]?.title || new Date().toISOString().split('T')[0]}>
+            <CalendarProvider date={validTransactions[0]?.title || new Date().toISOString().split('T')[0]}>
                 {isWithCalendar && (
                     <ExpandableCalendar
                         testID={testIDs.expandableCalendar.CONTAINER}
@@ -211,11 +215,11 @@ const CalendarStat = ({
                     />
                 )}
 
-                {transactions?.length > 0 ? (
+                {validTransactions?.length > 0 ? (
                     <AgendaList
                         ref={agendaListRef}
                         style={{ marginHorizontal: -spacingX._20 }}
-                        sections={transactions}
+                        sections={validTransactions}
                         renderItem={renderAgenda}
                         onViewableItemsChanged={onViewableItemsChanged}
                         viewabilityConfig={{ viewAreaCoveragePercentThreshold: 50 }}

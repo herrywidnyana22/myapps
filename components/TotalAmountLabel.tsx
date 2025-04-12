@@ -16,7 +16,9 @@ const TotalAmountLabel = ({totalAmount}: TotalAmountLabelType) => {
         <View style={[styles.totalAmountLabel, {
                 backgroundColor: isTotalAmountNegative
                     ? colors.neutral.rose 
-                    : totalAmount === 0 ? colors.neutral.neutralDark : colors.neutral.green
+                    : totalAmount === 0 
+                        ? colors.neutral.neutralDark 
+                        : colors.neutral.green
                 }
             ]}
         >      
